@@ -1,13 +1,11 @@
 
+
 package com.example.course_backend;
 
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-
-
 
 @Entity
 @Data
@@ -21,16 +19,23 @@ public class Course {
 
     private String name;
     private String description;
-    private String board;   // e.g., CBSE, State Board
-    private String medium;  // e.g., English, Kannada
-    private String grade;   // e.g., Class 1, Class 2
-    private String subject; // e.g., English, Hindi
+
+    @Enumerated(EnumType.STRING)
+    private Enums.Board board;
+
+    @Enumerated(EnumType.STRING)
+    private Enums.Medium medium;
+
+    @Enumerated(EnumType.STRING)
+    private Enums.Grade grade;
+
+    @Enumerated(EnumType.STRING)
+    private Enums.Subject subject;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "course_id")
-    @JsonManagedReference  // <- add this
+    @JsonManagedReference
     private List<Unit> units = new ArrayList<>();
-
-
 }
+
 
