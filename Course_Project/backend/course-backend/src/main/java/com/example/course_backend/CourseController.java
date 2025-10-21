@@ -1,3 +1,6 @@
+
+
+
 package com.example.course_backend;
 
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +22,6 @@ public class CourseController {
         return ResponseUtil.success("api.course.create", "Course created successfully");
     }
 
-//    @GetMapping
-//    public ApiResponse<List<Course>> getAllCourses() {
-//        List<Course> courses = courseService.getAllCourses();
-//        return ResponseUtil.successWithData("api.course.getAll", courses);
-//    }
     @GetMapping
     public ApiResponse<Map<String, Object>> getAllCourses() {
         List<Course> courses = courseService.getAllCourses();
@@ -34,4 +32,21 @@ public class CourseController {
         return ResponseUtil.successWithData("api.course.getAll", result);
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<Map<String, Object>> getCourseById(@PathVariable UUID id) {
+        Course course = courseService.getCourseById(id);
+        if (course != null) {
+            Map<String, Object> result = Map.of(
+                    "message", "Course fetched successfully",
+                    "data", course
+            );
+            return ResponseUtil.successWithData("api.course.getById", result);
+        } else {
+            return ResponseUtil.failureWithData("api.course.getById", "404", "Course not found");
+        }
+    }
 }
+
+
+
+

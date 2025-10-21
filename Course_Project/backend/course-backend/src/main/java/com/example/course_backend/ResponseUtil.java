@@ -39,4 +39,15 @@ public class ResponseUtil {
         response.setResult(null);
         return response;
     }
+    public static ApiResponse<Map<String, Object>> failureWithData(String apiId, String errCode, String errMsg) {
+        ApiResponse<Map<String, Object>> response = new ApiResponse<>();
+        response.setId(apiId);
+        response.setVer("v1");
+        response.setTs(Instant.now());
+        response.setParams(new ApiResponse.Params(UUID.randomUUID().toString(), "failure", errCode, errMsg));
+        response.setResponseCode("ERROR");
+        response.setResult(Map.of("message", errMsg));
+        return response;
+    }
+
 }

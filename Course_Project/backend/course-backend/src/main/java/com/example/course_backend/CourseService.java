@@ -1,7 +1,8 @@
+
 package com.example.course_backend;
 
 import org.springframework.stereotype.Service;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CourseService {
@@ -18,5 +19,10 @@ public class CourseService {
 
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
+    }
+
+    public Course getCourseById(UUID courseId) {
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
     }
 }

@@ -1,14 +1,12 @@
+
+
 package com.example.course_backend;
 
-import com.example.course_backend.Unit;
-import com.example.course_backend.UnitService;
-import com.example.course_backend.ApiResponse;
-import com.example.course_backend.ResponseUtil;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/units")
+@RequestMapping("/api/courses/{courseId}/units")
 public class UnitController {
 
     private final UnitService unitService;
@@ -18,14 +16,26 @@ public class UnitController {
     }
 
     @PostMapping
-    public ApiResponse<Map<String, String>> createUnit(@RequestBody Unit unit) {
-        unitService.createUnit(unit);
-        return ResponseUtil.success("api.unit.create", "Unit created successfully");
+    public ApiResponse<Map<String, Object>> addUnitToCourse(
+            @PathVariable UUID courseId,
+            @RequestBody Unit unit
+    ) {
+        unitService.addUnitToCourse(courseId, unit);
+        Map<String, Object> result = Map.of(
+                "message", "Unit added successfully",
+                "data", unit
+        );
+        return ResponseUtil.successWithData("api.unit.create", result);
     }
 
     @GetMapping
-    public ApiResponse<List<Unit>> getAllUnits() {
-        List<Unit> units = unitService.getAllUnits();
-        return ResponseUtil.successWithData("api.unit.getAll", units);
+    public ApiResponse<Map<String, Object>> getUnitsByCourse(@PathVariable UUID courseId) {
+        List<Unit> units = unitService.getUnitsByCourseId(courseId);
+        Map<String, Object> result = Map.of(
+                "message", "Units fetched successfully",
+                "data", units
+        );
+        return ResponseUtil.successWithData("api.unit.getAll", result);
     }
 }
+

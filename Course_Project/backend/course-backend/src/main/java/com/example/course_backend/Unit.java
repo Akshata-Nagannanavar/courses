@@ -1,8 +1,10 @@
+
 package com.example.course_backend;
 
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Data
@@ -16,4 +18,16 @@ public class Unit {
 
     private String title;
     private String content;
+
+
+
+
+
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    @JsonBackReference  // prevents infinite JSON recursion
+    private Course course;
+
+
+
 }
