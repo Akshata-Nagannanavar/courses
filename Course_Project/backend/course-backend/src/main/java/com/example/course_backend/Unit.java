@@ -20,9 +20,6 @@ public class Unit {
     private String content;
 
 
-
-
-
     @ManyToOne
     @JoinColumn(name = "course_id")
     @JsonBackReference  // prevents infinite JSON recursion
