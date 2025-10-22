@@ -25,6 +25,4 @@ public class Unit {
     @JsonBackReference  // prevents infinite JSON recursion
     private Course course;
 
-
-
 }

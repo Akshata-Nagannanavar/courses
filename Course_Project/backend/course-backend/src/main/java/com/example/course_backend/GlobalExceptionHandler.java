@@ -13,3 +13,4 @@ public class GlobalExceptionHandler {
         return ResponseUtil.failure("api.error", "500", ex.getMessage());
     }
 }
+

@@ -1,5 +1,4 @@
 
-
 package com.example.course_backend;
 
 import jakarta.persistence.*;
@@ -37,5 +36,4 @@ public class Course {
     @JsonManagedReference
     private List<Unit> units = new ArrayList<>();
 }
-
 
