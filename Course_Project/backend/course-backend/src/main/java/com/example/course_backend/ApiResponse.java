@@ -8,20 +8,20 @@ import java.time.Instant;
 @AllArgsConstructor
 public class ApiResponse<T> {
 
-    private String id;           // e.g., "api.course.create"
-    private String ver = "v1";   // version
-    private Instant ts;          // timestamp
-    private Params params;       // metadata
-    private String responseCode; // "OK" or "ERROR"
-    private T result;            // actual data
+    private String id;
+    private String ver = "v1";
+    private Instant ts;
+    private Params params;
+    private String responseCode;
+    private T result;
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Params {
-        private String msgid;     // unique UUID for request
-        private String status;    // "success" or "failure"
-        private String err;       // error code
-        private String errmsg;    // error message
+        private String msgid;
+        private String status;
+        private String err;
+        private String errmsg;
     }
 }

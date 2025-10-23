@@ -1,9 +1,8 @@
 package com.example.course_backend;
 
-import com.example.course_backend.ApiResponse;
 import java.time.Instant;
-import java.util.UUID;
 import java.util.Map;
+import java.util.UUID;
 
 public class ResponseUtil {
 
@@ -39,6 +38,7 @@ public class ResponseUtil {
         response.setResult(null);
         return response;
     }
+
     public static ApiResponse<Map<String, Object>> failureWithData(String apiId, String errCode, String errMsg) {
         ApiResponse<Map<String, Object>> response = new ApiResponse<>();
         response.setId(apiId);
@@ -49,5 +49,4 @@ public class ResponseUtil {
         response.setResult(Map.of("message", errMsg));
         return response;
     }
-
 }
