@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+
 @Service
 public class CourseService {
 
@@ -23,6 +26,8 @@ public class CourseService {
     }
 
     // Create course
+
+    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public Course createCourse(Course course) {
         if (course.getName() == null || course.getName().isBlank())
             throw new BadRequestException("Name is required");
@@ -45,12 +50,14 @@ public class CourseService {
     }
 
     // Get by ID
+    @Cacheable(value = "courses", key = "#courseId")
     public Course getCourseById(UUID courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found with id: " + courseId));
     }
 
     // Update (PUT)
+    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public Course updateCourse(UUID courseId, Course updatedCourse) {
         Course existing = getCourseById(courseId);
 
@@ -79,6 +86,7 @@ public class CourseService {
     }
 
     // Patch (partial update)
+    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public Course patchCourse(UUID courseId, Map<String, Object> updates) {
         Course course = getCourseById(courseId);
 
@@ -108,6 +116,7 @@ public class CourseService {
     }
 
     // Delete course
+    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public void deleteCourse(UUID courseId) {
         Course course = getCourseById(courseId);
 
@@ -123,6 +132,7 @@ public class CourseService {
     }
 
     // ✅ Fixed GET filtering, sorting, and paging
+    @Cacheable(value = "coursesList", key = "#root.methodName + '_' + #board + '_' + #grade + '_' + #subject + '_' + #search + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public Page<Course> filterSearchSortPageable(String board, String grade, String subject,
                                                  String search, String orderBy, String direction,
                                                  Pageable pageable) {
