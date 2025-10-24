@@ -36,10 +36,16 @@ public class Course {
     @NotBlank(message = "Subject is required")
     private String subject;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "course_id")
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "course_id")
+//    @JsonManagedReference
+//    private List<Unit> units = new ArrayList<>();
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST, orphanRemoval = false)
     @JsonManagedReference
     private List<Unit> units = new ArrayList<>();
+
+
 
     // For JSON binding only; persisted via `medium` string column using converter in service
     @Size(min = 1, message = "At least one medium is required")

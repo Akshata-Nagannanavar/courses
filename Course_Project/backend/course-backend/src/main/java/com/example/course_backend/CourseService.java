@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import com.example.course_backend.UnitRepository;
+
 
 @Service
 public class CourseService {
@@ -15,10 +17,14 @@ public class CourseService {
     private static final Logger logger = LoggerFactory.getLogger(CourseService.class);
 
     private final CourseRepository courseRepository;
+    private final UnitRepository unitRepository;
     private final MediumListConverter mediumConverter = new MediumListConverter();
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository,  UnitRepository unitRepository) {
+
         this.courseRepository = courseRepository;
+        this.unitRepository = unitRepository;
+
     }
 
     // Create course: validate fields, convert mediums -> medium column
@@ -125,12 +131,39 @@ public class CourseService {
         return saved;
     }
 
-    // Delete
+//    // Delete
+//    public void deleteCourse(UUID courseId) {
+//        if (!courseRepository.existsById(courseId)) throw new NotFoundException("Course not found with id: " + courseId);
+//        courseRepository.deleteById(courseId);
+//        logger.info("Deleted course (id={})", courseId);
+//    }
+//    public void deleteCourse(UUID courseId) {
+//        Course course = courseRepository.findById(courseId)
+//                .orElseThrow(() -> new NotFoundException("Course not found"));
+//
+//        // Nullify course reference in units
+//        course.getUnits().forEach(unit -> unit.setCourse(null));
+//
+//        courseRepository.delete(course);
+//    }
     public void deleteCourse(UUID courseId) {
-        if (!courseRepository.existsById(courseId)) throw new NotFoundException("Course not found with id: " + courseId);
-        courseRepository.deleteById(courseId);
-        logger.info("Deleted course (id={})", courseId);
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course not found"));
+
+        // Detach units first
+        List<Unit> units = course.getUnits();
+        if (units != null) {
+            for (Unit unit : units) {
+                unit.setCourse(null); // set course_id to NULL in DB
+            }
+            unitRepository.saveAll(units); // save units with null course_id
+        }
+
+        // Now delete the course
+        courseRepository.delete(course);
     }
+
+
 
     /**
      * Pagination + filter + search + sort

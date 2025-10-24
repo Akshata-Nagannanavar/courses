@@ -7,11 +7,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL) // 🚀 Ignore null fields in JSON
 public class Unit {
 
     @Id
@@ -24,8 +26,8 @@ public class Unit {
     @NotBlank(message = "Unit content is required")
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = true)
     @JsonBackReference
     private Course course;
 }
