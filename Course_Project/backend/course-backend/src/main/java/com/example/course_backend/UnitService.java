@@ -1,3 +1,5 @@
+
+
 package com.example.course_backend;
 
 import org.springframework.stereotype.Service;
@@ -21,14 +23,20 @@ public class UnitService {
     public Unit addUnitToCourse(UUID courseId, Unit unit) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found"));
-        if (unit.getTitle() == null || unit.getTitle().isBlank()) throw new BadRequestException("Unit title is required");
-        if (unit.getContent() == null || unit.getContent().isBlank()) throw new BadRequestException("Unit content is required");
 
-        unit.setCourse(course);
-        course.getUnits().add(unit);
-        courseRepository.save(course);
-        logger.info("Added unit '{}' to course '{}'", unit.getTitle(), course.getName());
-        return unit;
+        if (unit.getTitle() == null || unit.getTitle().isBlank())
+            throw new BadRequestException("Unit title is required");
+        if (unit.getContent() == null || unit.getContent().isBlank())
+            throw new BadRequestException("Unit content is required");
+
+        unit.setCourse(course); // link unit to course
+        Unit savedUnit = unitRepository.save(unit); // save unit explicitly
+
+        // Optionally, add to course units list (not mandatory if mappedBy is correct)
+        course.getUnits().add(savedUnit);
+
+        logger.info("Added unit '{}' to course '{}'", savedUnit.getTitle(), course.getName());
+        return savedUnit;
     }
 
     public Page<Unit> getUnitsByCoursePaginated(UUID courseId, Pageable pageable) {
@@ -43,7 +51,8 @@ public class UnitService {
 
     public Unit updateUnit(UUID courseId, UUID unitId, Unit updatedUnit) {
         Unit unit = unitRepository.findById(unitId).orElseThrow(() -> new NotFoundException("Unit not found"));
-        if (unit.getCourse() == null || !unit.getCourse().getId().equals(courseId)) throw new BadRequestException("Unit does not belong to course " + courseId);
+        if (unit.getCourse() == null || !unit.getCourse().getId().equals(courseId))
+            throw new BadRequestException("Unit does not belong to course " + courseId);
 
         if (updatedUnit.getTitle() != null && !updatedUnit.getTitle().isBlank()) unit.setTitle(updatedUnit.getTitle());
         if (updatedUnit.getContent() != null && !updatedUnit.getContent().isBlank()) unit.setContent(updatedUnit.getContent());
@@ -54,7 +63,8 @@ public class UnitService {
 
     public Unit patchUnit(UUID courseId, UUID unitId, Map<String, Object> updates) {
         Unit unit = unitRepository.findById(unitId).orElseThrow(() -> new NotFoundException("Unit not found"));
-        if (unit.getCourse() == null || !unit.getCourse().getId().equals(courseId)) throw new BadRequestException("Unit does not belong to course " + courseId);
+        if (unit.getCourse() == null || !unit.getCourse().getId().equals(courseId))
+            throw new BadRequestException("Unit does not belong to course " + courseId);
 
         updates.forEach((k, v) -> {
             switch (k) {
@@ -70,7 +80,8 @@ public class UnitService {
 
     public void deleteUnit(UUID courseId, UUID unitId) {
         Unit unit = unitRepository.findById(unitId).orElseThrow(() -> new NotFoundException("Unit not found"));
-        if (unit.getCourse() == null || !unit.getCourse().getId().equals(courseId)) throw new BadRequestException("Unit does not belong to course " + courseId);
+        if (unit.getCourse() == null || !unit.getCourse().getId().equals(courseId))
+            throw new BadRequestException("Unit does not belong to course " + courseId);
         unitRepository.delete(unit);
         logger.info("Deleted unit: {} (id={})", unit.getTitle(), unit.getId());
     }

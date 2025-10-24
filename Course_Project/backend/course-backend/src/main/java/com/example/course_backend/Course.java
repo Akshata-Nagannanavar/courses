@@ -14,41 +14,34 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Course {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "UUID")
     private UUID id;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Name cannot be null or blank")
     private String name;
 
-    @NotBlank(message = "Description is required")
+    @NotBlank(message = "Description cannot be null or blank")
     private String description;
 
-    @NotBlank(message = "Board is required")
-    private String board;
+    @Column(columnDefinition = "jsonb")
+    @Convert(converter = StringListConverter.class)
+    @NotEmpty(message = "Board list cannot be null or empty")
+    private List<String> board = new ArrayList<>();
 
-    // Existing column in DB: medium (stores comma-separated values)
-    @Column(name = "medium")
-    private String medium;
+    @Column(columnDefinition = "jsonb")
+    @Convert(converter = StringListConverter.class)
+    @NotEmpty(message = "Medium list cannot be null or empty")
+    private List<String> medium = new ArrayList<>();
 
-    @NotBlank(message = "Grade is required")
-    private String grade;
+    @Column(columnDefinition = "jsonb")
+    @Convert(converter = StringListConverter.class)
+    @NotEmpty(message = "Grade list cannot be null or empty")
+    private List<String> grade = new ArrayList<>();
 
-    @NotBlank(message = "Subject is required")
+    @NotBlank(message = "Subject cannot be null or blank")
     private String subject;
-
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "course_id")
-//    @JsonManagedReference
-//    private List<Unit> units = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST, orphanRemoval = false)
     @JsonManagedReference
     private List<Unit> units = new ArrayList<>();
-
-
-
-    // For JSON binding only; persisted via `medium` string column using converter in service
-    @Size(min = 1, message = "At least one medium is required")
-    @Transient
-    private List<Enums.Medium> mediums = new ArrayList<>();
 }

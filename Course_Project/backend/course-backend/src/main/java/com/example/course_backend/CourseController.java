@@ -6,8 +6,6 @@ import org.springframework.data.web.PageableDefault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-
 
 import java.util.*;
 
@@ -31,7 +29,7 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getAllCourses(
+    public ResponseEntity<ApiResponse<Map<String, Object>>> filterSearchSortPageable(
             @RequestParam(required = false) String board,
             @RequestParam(required = false) String grade,
             @RequestParam(required = false) String subject,
