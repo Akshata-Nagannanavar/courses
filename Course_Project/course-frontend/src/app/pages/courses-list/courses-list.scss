@@ -1,0 +1,146 @@
+.courses-layout {
+  .card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.15);
+      z-index: 10;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+
+      /* show full description */
+      .text-truncate-3 {
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
+        overflow: visible;
+        white-space: normal;
+      }
+
+      /* show all units */
+      .units ul {
+        max-height: none;
+        overflow: visible;
+      }
+
+      /* card body auto-height */
+      .card-body {
+        min-height: auto;
+      }
+    }
+
+    .card-body {
+      min-height: 230px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1rem 1.2rem;
+      transition: all 0.3s ease;
+      overflow: visible;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .card-text {
+      font-size: 0.9rem;
+      color: #555;
+      transition: color 0.2s ease;
+    }
+
+    .meta {
+      font-size: 0.85rem;
+      color: #6c757d;
+      line-height: 1.4;
+      strong {
+        color: #333;
+      }
+    }
+
+    .units {
+      font-size: 0.85rem;
+      color: #555;
+      ul {
+        padding-left: 1.2rem;
+        margin-bottom: 0.4rem;
+        overflow: hidden;
+        max-height: 3.5rem;
+        transition: max-height 0.4s ease;
+      }
+      li {
+        list-style-type: disc;
+      }
+    }
+
+    button {
+      border-radius: 6px;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      transition: all 0.25s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+        opacity: 1;
+      }
+
+      &.btn-outline-primary {
+        border: 1px solid #007bff;
+        color: #007bff;
+        background: transparent;
+
+        &:hover {
+          background: #007bff;
+          color: #fff;
+        }
+      }
+
+      &.btn-outline-danger {
+        border: 1px solid #dc3545;
+        color: #dc3545;
+        background: transparent;
+
+        &:hover {
+          background: #dc3545;
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  /* responsive adjustments */
+  @media (max-width: 767px) {
+    .filters {
+      margin-bottom: 1rem;
+    }
+    .card {
+      .card-body {
+        padding: 0.9rem;
+      }
+    }
+  }
+
+  .filters .dropdown-menu {
+    width: 100%;
+    box-shadow: none;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  button.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-weight: 500;
+
+    &:hover {
+      background-color: #0069d9;
+      border-color: #005cbf;
+    }
+  }
+}

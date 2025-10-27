@@ -1,0 +1,10 @@
+<div class="page-container">
+  <h2>Create Unit</h2>
+
+  <form [formGroup]="unitForm" (ngSubmit)="onSubmit()">
+    <input type="text" formControlName="title" placeholder="Unit Title" />
+    <textarea formControlName="content" placeholder="Content"></textarea>
+    <button type="submit" class="btn">Save Unit</button>
+  </form>
+</div>
+

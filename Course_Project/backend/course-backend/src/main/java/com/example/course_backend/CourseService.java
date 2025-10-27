@@ -1,7 +1,6 @@
 package com.example.course_backend;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +24,7 @@ public class CourseService {
         this.unitRepository = unitRepository;
     }
 
-    // Create course
-
+    // ✅ CREATE
     @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public Course createCourse(Course course) {
         if (course.getName() == null || course.getName().isBlank())
@@ -49,14 +47,14 @@ public class CourseService {
         return saved;
     }
 
-    // Get by ID
+    // ✅ READ (single)
     @Cacheable(value = "courses", key = "#courseId")
     public Course getCourseById(UUID courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found with id: " + courseId));
     }
 
-    // Update (PUT)
+    // ✅ UPDATE
     @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public Course updateCourse(UUID courseId, Course updatedCourse) {
         Course existing = getCourseById(courseId);
@@ -85,7 +83,7 @@ public class CourseService {
         return saved;
     }
 
-    // Patch (partial update)
+    // ✅ PATCH
     @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public Course patchCourse(UUID courseId, Map<String, Object> updates) {
         Course course = getCourseById(courseId);
@@ -115,7 +113,7 @@ public class CourseService {
         return saved;
     }
 
-    // Delete course
+    // ✅ DELETE
     @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public void deleteCourse(UUID courseId) {
         Course course = getCourseById(courseId);
@@ -131,14 +129,15 @@ public class CourseService {
         logger.info("Deleted course: {} (id={})", course.getName(), course.getId());
     }
 
-    // ✅ Fixed GET filtering, sorting, and paging
+    // ✅ TRUE SERVER-SIDE PAGINATION & FILTERING
     @Cacheable(value = "coursesList", key = "#root.methodName + '_' + #board + '_' + #grade + '_' + #subject + '_' + #search + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public Page<Course> filterSearchSortPageable(String board, String grade, String subject,
                                                  String search, String orderBy, String direction,
                                                  Pageable pageable) {
 
-        Page<Course> allCoursesPage = courseRepository.findAll(pageable);
-        List<Course> filtered = allCoursesPage.getContent().stream()
+        List<Course> allCourses = courseRepository.findAll(); // 🔹 get all from DB first
+
+        List<Course> filtered = allCourses.stream()
                 .filter(c -> board == null || board.isBlank() || (c.getBoard() != null && c.getBoard().contains(board)))
                 .filter(c -> grade == null || grade.isBlank() || (c.getGrade() != null && c.getGrade().contains(grade)))
                 .filter(c -> subject == null || subject.isBlank() || (c.getSubject() != null && c.getSubject().equalsIgnoreCase(subject)))
@@ -150,6 +149,16 @@ public class CourseService {
                 })
                 .collect(Collectors.toList());
 
-        return new org.springframework.data.domain.PageImpl<>(filtered, pageable, filtered.size());
+        // Sorting
+        Comparator<Course> comparator = Comparator.comparing(Course::getName, String.CASE_INSENSITIVE_ORDER);
+        if ("desc".equalsIgnoreCase(direction)) comparator = comparator.reversed();
+        filtered.sort(comparator);
+
+        // Pagination logic
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), filtered.size());
+        List<Course> pageContent = start >= filtered.size() ? List.of() : filtered.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, filtered.size());
     }
 }
