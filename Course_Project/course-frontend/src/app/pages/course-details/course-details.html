@@ -1,0 +1,94 @@
+<div class="course-details-container" *ngIf="courseData">
+  <h2>{{ courseData.name }}</h2>
+
+
+  <div class="card">
+    <div *ngIf="!editMode">
+      <p><strong>Description:</strong> {{ courseData.description }}</p>
+      <p><strong>Board:</strong> {{ courseData.board }}</p>
+      <p><strong>Mediums:</strong> {{ courseData.medium.join(', ') }}</p>
+      <p><strong>Grades:</strong> {{ courseData.grade.join(', ') }}</p>
+      <p><strong>Subjects:</strong> {{ courseData.subject.join(', ') }}</p>
+
+
+
+       <div class="units mb-3" *ngIf="courseData.units && courseData.units.length > 0; else noUnits">
+                <strong>Units:</strong>
+                <ul class="mb-0">
+                  <li *ngFor="let u of courseData.units"><strong>{{ u.title }}</strong>: {{ u.content }}</li>
+                </ul>
+              </div>
+              <ng-template #noUnits>
+                <div class="small text-muted">No units</div>
+              </ng-template>
+
+      <div class="buttons">
+        <button (click)="toggleEdit()">Edit</button>
+        <button (click)="goBack()">Back</button>
+      </div>
+    </div>
+
+    <form *ngIf="editMode" [formGroup]="courseForm" (ngSubmit)="onSave()">
+      <label>
+        Course Name:
+        <input formControlName="name" type="text" />
+      </label>
+
+      <label>
+        Description:
+        <textarea formControlName="description"></textarea>
+      </label>
+
+      <label>
+        Board:
+        <select formControlName="board">
+          <option *ngFor="let b of boards" [value]="b">{{ b }}</option>
+        </select>
+      </label>
+
+      <div class="multi-select">
+        <strong>Mediums:</strong>
+        <div *ngFor="let m of mediums">
+          <input
+            type="checkbox"
+            [value]="m"
+            [checked]="selectedMediums.includes(m)"
+            (change)="onCheckboxChange($event, 'medium')"
+          />
+          {{ m }}
+        </div>
+      </div>
+
+      <div class="multi-select">
+        <strong>Grades:</strong>
+        <div *ngFor="let g of grades">
+          <input
+            type="checkbox"
+            [value]="g"
+            [checked]="selectedGrades.includes(g)"
+            (change)="onCheckboxChange($event, 'grade')"
+          />
+          {{ g }}
+        </div>
+      </div>
+
+      <div class="multi-select">
+        <strong>Subjects:</strong>
+        <div *ngFor="let s of subjects">
+          <input
+            type="checkbox"
+            [value]="s"
+            [checked]="selectedSubjects.includes(s)"
+            (change)="onCheckboxChange($event, 'subject')"
+          />
+          {{ s }}
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="submit">Save</button>
+        <button type="button" (click)="onCancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

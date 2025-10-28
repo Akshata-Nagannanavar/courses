@@ -1,0 +1,210 @@
+/* ====== Layout Container ====== */
+.course-details-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: linear-gradient(160deg, #eef2f7 0%, #f8f9fb 100%);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  color: #2c3e50;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+/* ====== Heading ====== */
+.course-details-container h2 {
+  text-align: center;
+  color: #004aad;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0;
+}
+
+/* ====== Card ====== */
+.card {
+  background: #fdfdfd;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* ====== Section Titles ====== */
+.card strong {
+  color: #004aad;
+}
+
+/* ====== Info Paragraphs ====== */
+p {
+  margin: 0.3rem 0;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* ====== Units Section ====== */
+.units {
+  background-color: #e8f1ff;
+  border-left: 5px solid #007bff;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+}
+
+.units ul {
+  padding-left: 1.3rem;
+  margin-top: 0.5rem;
+}
+
+.units li {
+  margin-bottom: 0.3rem;
+}
+
+/* ====== Form Labels ====== */
+label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+/* ====== Inputs & Textareas ====== */
+input,
+textarea,
+select {
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #cfd4da;
+  background: #fafafa;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.95rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
+  outline: none;
+  background: #fff;
+}
+
+/* ====== Multi-select Groups ====== */
+.multi-select {
+  margin-bottom: 1rem;
+  background: #f3f7fc;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.multi-select strong {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: #004aad;
+  font-weight: 600;
+}
+
+.multi-select div {
+  display: inline-block;
+  margin-right: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.multi-select input[type="checkbox"] {
+  accent-color: #007bff;
+  transform: scale(1.1);
+  margin-right: 0.3rem;
+}
+
+/* ====== Buttons ====== */
+.buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+button {
+  border: none;
+  padding: 0.7rem 1.4rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Primary Action */
+button[type="submit"],
+button:not([type]) {
+  background: #036d43;
+  color: white;
+}
+
+button[type="submit"]:hover,
+button:not([type]):hover {
+  background: #03b300;
+  transform: translateY(-2px);
+}
+
+/* Secondary / Cancel */
+button[type="button"] {
+  background-color: #6c757d;
+  color: white;
+}
+
+button[type="button"]:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Back button special color */
+button:nth-child(2) {
+  background-color: #b84f17;
+}
+
+button:nth-child(2):hover {
+  background-color: #962913;
+}
+
+/* ====== Responsive Design ====== */
+@media (max-width: 768px) {
+  .course-details-container {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1.2rem;
+  }
+
+  .multi-select {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  button {
+    width: 100%;
+  }
+}
