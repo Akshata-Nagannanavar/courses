@@ -1,43 +1,97 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# ========================
+# Angular / Node / TypeScript
+# ========================
 
-# Compiled output
+# compiled output
 /dist
 /tmp
 /out-tsc
-/bazel-out
 
 # Node
 /node_modules
-npm-debug.log
-yarn-error.log
 
+# compiled source
+**/*.js
+**/*.js.map
+
+# TypeScript
+*.tsbuildinfo
+
+# Angular build files
+.angular/cache
+.angular/local
+.angular/server
+
+# environment files
+/src/environments/environment*.ts
+
+# ========================
 # IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+# ========================
 
-# Visual Studio Code
+# VS Code
 .vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
 !.vscode/settings.json
 !.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
+# IntelliJ / WebStorm
+.idea/
+*.iml
 
-# System files
+# Sublime
+*.sublime-workspace
+*.sublime-project
+
+# ========================
+# OS generated files
+# ========================
+
+# macOS
 .DS_Store
+
+# Windows
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# ========================
+# Logs and temp files
+# ========================
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ========================
+# Miscellaneous
+# ========================
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Coverage reports
+/coverage
+
+# Build outputs from other tools
+/.sass-cache
+/connect.lock
+/typings
+/jspm_packages
+/bower_components
+
+# IDE project settings
+/.project
+/.classpath
+/.settings/
+
+# End of file

@@ -1,0 +1,136 @@
+.create-course-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    color: #004085;
+    margin-bottom: 1.5rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+      label {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: #343a40;
+      }
+
+      input,
+      textarea,
+      select {
+        padding: 0.6rem;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+
+        &:focus {
+          border-color: #007bff;
+          outline: none;
+        }
+      }
+
+      small {
+        color: red;
+        font-size: 0.8rem;
+      }
+
+      .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+
+        label {
+          background: #f1f3f5;
+          border-radius: 8px;
+          padding: 0.3rem 0.7rem;
+          cursor: pointer;
+          transition: background 0.3s;
+
+          &:hover {
+            background: #e2e6ea;
+          }
+
+          input {
+            accent-color: #007bff;
+          }
+        }
+      }
+
+      .selected-list {
+        margin-top: 0.8rem;
+        background: #e7f1ff;
+        border-left: 4px solid #007bff;
+        border-radius: 8px;
+        padding: 0.8rem;
+
+        h4 {
+          font-size: 0.9rem;
+          color: #004085;
+          margin-bottom: 0.5rem;
+        }
+
+        .selected-item {
+          background: #fff;
+          border-radius: 6px;
+          padding: 0.3rem 0.6rem;
+          margin-bottom: 0.3rem;
+          color: #212529;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+      }
+    }
+
+    button[type='submit'] {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+
+      &:hover {
+        background: #0056b3;
+      }
+
+      &:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .unit-btn {
+    width: 100%;
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background: #218838;
+    }
+  }
+}
