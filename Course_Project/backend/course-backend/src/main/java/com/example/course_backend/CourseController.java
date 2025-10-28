@@ -20,7 +20,6 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    // ✅ Create
     @PostMapping
     public ResponseEntity<ApiResponse<Map<String, Object>>> createCourse(@RequestBody Course course) {
         logger.info("Create course request: {}", course);
@@ -29,12 +28,11 @@ public class CourseController {
         return ResponseEntity.status(201).body(ResponseUtil.successWithData("api.course.create", result));
     }
 
-    // ✅ Get all (with search + filters + pagination)
     @GetMapping
     public ResponseEntity<ApiResponse<Map<String, Object>>> getAllCourses(
             @RequestParam(required = false) String board,
-            @RequestParam(required = false) String grade,
             @RequestParam(required = false) String subject,
+            @RequestParam(required = false) String grade,
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -47,7 +45,7 @@ public class CourseController {
                         : Sort.by(orderBy).descending());
 
         Page<Course> coursesPage = courseService.filterSearchSortPageable(
-                board, grade, subject, search, orderBy, direction, pageable);
+                board, subject, grade, search, orderBy, direction, pageable);
 
         Map<String, Object> result = new HashMap<>();
         result.put("message", coursesPage.isEmpty() ? "No courses found" : "Courses fetched successfully");
@@ -59,7 +57,6 @@ public class CourseController {
         return ResponseEntity.ok(ResponseUtil.successWithData("api.course.getAll", result));
     }
 
-    // ✅ Get by ID
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getCourseById(@PathVariable UUID id) {
         Course course = courseService.getCourseById(id);
@@ -67,7 +64,6 @@ public class CourseController {
         return ResponseEntity.ok(ResponseUtil.successWithData("api.course.getById", result));
     }
 
-    // ✅ Update
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> updateCourse(@PathVariable UUID id,
                                                                          @RequestBody Course updatedCourse) {
@@ -76,7 +72,6 @@ public class CourseController {
         return ResponseEntity.ok(ResponseUtil.successWithData("api.course.update", result));
     }
 
-    // ✅ Patch
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> patchCourse(@PathVariable UUID id,
                                                                         @RequestBody Map<String, Object> updates) {
@@ -85,7 +80,6 @@ public class CourseController {
         return ResponseEntity.ok(ResponseUtil.successWithData("api.course.patch", result));
     }
 
-    // ✅ Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> deleteCourse(@PathVariable UUID id) {
         courseService.deleteCourse(id);

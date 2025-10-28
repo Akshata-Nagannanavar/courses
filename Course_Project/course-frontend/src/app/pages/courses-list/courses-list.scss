@@ -1,146 +1,124 @@
 .courses-layout {
-  .card {
-    border: none;
-    border-radius: 12px;
-    overflow: hidden;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef); // subtle gradient background
+  min-height: 100vh;
+  padding-bottom: 2rem;
+
+  .filters {
     background: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    cursor: pointer;
-    &:hover {
-      transform: scale(1.15);
-      z-index: 10;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', sans-serif;
 
-      /* show full description */
-      .text-truncate-3 {
-        -webkit-line-clamp: unset;
-        line-clamp: unset;
-        overflow: visible;
-        white-space: normal;
-      }
-
-      /* show all units */
-      .units ul {
-        max-height: none;
-        overflow: visible;
-      }
-
-      /* card body auto-height */
-      .card-body {
-        min-height: auto;
-      }
-    }
-
-    .card-body {
-      min-height: 230px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 1rem 1.2rem;
-      transition: all 0.3s ease;
-      overflow: visible;
-    }
-
-    .card-title {
-      font-size: 1.05rem;
+    h5 {
       font-weight: 600;
-      color: #2c3e50;
+      color: #343a40;
     }
 
-    .card-text {
-      font-size: 0.9rem;
-      color: #555;
-      transition: color 0.2s ease;
+    .form-label {
+      color: #495057;
     }
 
-    .meta {
-      font-size: 0.85rem;
-      color: #6c757d;
-      line-height: 1.4;
-      strong {
-        color: #333;
-      }
+    .dropdown-menu {
+      max-height: 240px;
+      overflow-y: auto;
     }
+  }
 
-    .units {
-      font-size: 0.85rem;
-      color: #555;
-      ul {
-        padding-left: 1.2rem;
-        margin-bottom: 0.4rem;
-        overflow: hidden;
-        max-height: 3.5rem;
-        transition: max-height 0.4s ease;
-      }
-      li {
-        list-style-type: disc;
-      }
-    }
-
-    button {
-      border-radius: 6px;
-      font-weight: 500;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-      transition: all 0.25s ease;
+  main {
+    .card {
+      border: none;
+      border-radius: 15px;
+      background: linear-gradient(145deg, #ffffff, #f1f3f5);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 12px rgba(0,0,0,0.15);
-        opacity: 1;
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
       }
 
-      &.btn-outline-primary {
-        border: 1px solid #007bff;
-        color: #007bff;
-        background: transparent;
-
-        &:hover {
-          background: #007bff;
-          color: #fff;
-        }
-      }
-
-      &.btn-outline-danger {
-        border: 1px solid #dc3545;
-        color: #dc3545;
-        background: transparent;
-
-        &:hover {
-          background: #dc3545;
-          color: #fff;
-        }
-      }
-    }
-  }
-
-  /* responsive adjustments */
-  @media (max-width: 767px) {
-    .filters {
-      margin-bottom: 1rem;
-    }
-    .card {
       .card-body {
-        padding: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        .card-title {
+          font-weight: 600;
+          color: #0d6efd;
+        }
+
+        small.text-muted {
+          color: #6c757d;
+        }
+
+
+        .card-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  max-height: 4.5em; /* ~3 lines if line-height is 1.5em */
+  line-height: 1.5em;
+}
+
+
+        .meta {
+          font-size: 0.875rem;
+          color: #495057;
+          div {
+            margin-bottom: 0.25rem;
+          }
+        }
+
+        .units ul {
+          padding-left: 1rem;
+          margin-bottom: 0;
+        }
+
+        .mt-auto {
+          display: flex;
+          gap: 0.5rem;
+
+          .btn-outline-primary {
+            border-radius: 8px;
+            flex-grow: 1;
+            font-weight: 500;
+          }
+
+          .btn-outline-danger {
+            border-radius: 8px;
+          }
+        }
       }
     }
-  }
 
-  .filters .dropdown-menu {
-    width: 100%;
-    box-shadow: none;
-    border: 1px solid rgba(0,0,0,0.08);
-  }
+    /* Pagination styling */
+    .pagination {
+      justify-content: center;
+      margin-top: 2rem;
 
-  button.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    font-weight: 500;
+      .page-item.disabled .page-link {
+        pointer-events: none;
+        opacity: 0.5;
+      }
 
-    &:hover {
-      background-color: #0069d9;
-      border-color: #005cbf;
+      .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: #fff;
+      }
+
+      .page-link {
+        border-radius: 8px;
+        margin: 0 2px;
+        transition: all 0.2s;
+
+        &:hover {
+          background-color: #e2e6ea;
+        }
+      }
     }
   }
 }

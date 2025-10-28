@@ -23,10 +23,13 @@ public class Course {
     @NotBlank(message = "Description cannot be null or blank")
     private String description;
 
+    @NotBlank(message = "Board cannot be null or blank")
+    private String board;
+
     @Column(columnDefinition = "jsonb")
     @Convert(converter = StringListConverter.class)
-    @NotEmpty(message = "Board list cannot be null or empty")
-    private List<String> board = new ArrayList<>();
+    @NotEmpty(message = "Subject list cannot be null or empty")
+    private List<String> subject = new ArrayList<>();
 
     @Column(columnDefinition = "jsonb")
     @Convert(converter = StringListConverter.class)
@@ -37,9 +40,6 @@ public class Course {
     @Convert(converter = StringListConverter.class)
     @NotEmpty(message = "Grade list cannot be null or empty")
     private List<String> grade = new ArrayList<>();
-
-    @NotBlank(message = "Subject cannot be null or blank")
-    private String subject;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST, orphanRemoval = false)
     @JsonManagedReference

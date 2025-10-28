@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Course } from '../../services/course'; // adjust path if needed
+import { Course } from '../../services/course';
 import type { Course as CourseModel } from '../../services/course';
 
 @Component({
@@ -14,18 +14,15 @@ import type { Course as CourseModel } from '../../services/course';
   encapsulation: ViewEncapsulation.Emulated
 })
 export class CoursesListComponent implements OnInit {
-  // listing
   courses: CourseModel[] = [];
   loading = false;
   error: string | null = null;
 
-  // server-side paging
   pageSize = 5;
-  page = 0; // zero-based
+  page = 0;
   totalPages = 0;
   totalElements = 0;
 
-  // search and filters (sent to server)
   searchTerm = '';
   filterBoards: string[] = [];
   filterMediums: string[] = [];
@@ -33,12 +30,11 @@ export class CoursesListComponent implements OnInit {
   filterSubjects: string[] = [];
 
   // UI selection state
-  selectedBoards = new Set<string>();
+  selectedBoard: string = '';       // single
   selectedMediums = new Set<string>();
   selectedGrades = new Set<string>();
-  selectedSubject: string | null = null; // single-select
+  selectedSubjects = new Set<string>(); // multi-select
 
-  // UI dropdown open states (for simple toggling)
   openBoardDropdown = false;
   openMediumDropdown = false;
   openGradeDropdown = false;
@@ -47,17 +43,14 @@ export class CoursesListComponent implements OnInit {
   constructor(private router: Router, private courseService: Course) {}
 
   ngOnInit(): void {
-    // Build filter lists using a full fetch (backend must allow a large page size or provide an /all endpoint)
     this.courseService.getAllForFilters().subscribe({
       next: (all) => {
         this.buildFiltersFromAll(all);
-        // initial load (server-side)
         this.loadPage(0);
       },
       error: (err) => {
-        // if fetching all fails, still proceed to paginated load
         console.warn('Failed to fetch all courses for filters:', err);
-        this.buildFiltersFromAll([]); // empty
+        this.buildFiltersFromAll([]);
         this.loadPage(0);
       }
     });
@@ -70,10 +63,10 @@ export class CoursesListComponent implements OnInit {
     const s = new Set<string>();
 
     for (const c of allCourses || []) {
-      (c.board || []).forEach(x => x && b.add(x));
+      if (c.board) b.add(c.board);      // single
       (c.medium || []).forEach(x => x && m.add(x));
       (c.grade || []).forEach(x => x && g.add(x));
-      if (c.subject) s.add(c.subject);
+      (c.subject || []).forEach(x => x && s.add(x));
     }
 
     this.filterBoards = Array.from(b).sort();
@@ -82,16 +75,16 @@ export class CoursesListComponent implements OnInit {
     this.filterSubjects = Array.from(s).sort();
   }
 
-  // Compose filter object and call server for the given page
   loadPage(pageIndex: number = 0) {
     this.loading = true;
     this.error = null;
+
     const filters = {
       search: this.searchTerm || undefined,
-      board: Array.from(this.selectedBoards),
+      board: this.selectedBoard || undefined, // single
       medium: Array.from(this.selectedMediums),
       grade: Array.from(this.selectedGrades),
-      subject: this.selectedSubject || undefined
+      subject: Array.from(this.selectedSubjects)
     };
 
     this.courseService.getAllCourses(pageIndex, this.pageSize, filters).subscribe({
@@ -110,40 +103,37 @@ export class CoursesListComponent implements OnInit {
     });
   }
 
-  // Called when user changes search text (debounce could be added)
   onSearchChange() {
     this.page = 0;
     this.loadPage(0);
   }
 
-  // Toggle selection helpers
+  // Toggle multi-select sets
   toggleSet(set: Set<string>, value: string) {
     if (set.has(value)) set.delete(value);
     else set.add(value);
 
-    // when filters change, reset to page 0 and reload
     this.page = 0;
     this.loadPage(0);
   }
 
-  // Subject is single-select
-  selectSubject(subject: string | null) {
-    this.selectedSubject = subject;
+  // Single-select board
+  selectBoard(board: string) {
+    this.selectedBoard = this.selectedBoard === board ? '' : board;
     this.page = 0;
     this.loadPage(0);
   }
 
   clearAllFilters() {
-    this.selectedBoards.clear();
+    this.selectedBoard = '';
     this.selectedMediums.clear();
     this.selectedGrades.clear();
-    this.selectedSubject = null;
+    this.selectedSubjects.clear();
     this.searchTerm = '';
     this.page = 0;
     this.loadPage(0);
   }
 
-  // Pagination controls
   prevPage() {
     if (this.page > 0) this.loadPage(this.page - 1);
   }
@@ -156,7 +146,6 @@ export class CoursesListComponent implements OnInit {
     if (i >= 0 && i < this.totalPages) this.loadPage(i);
   }
 
-  // Navigation & actions
   goToCreateCourse() {
     this.router.navigate(['/createCourse']);
   }
@@ -173,7 +162,6 @@ export class CoursesListComponent implements OnInit {
     this.courseService.deleteCourse(courseId).subscribe({
       next: (msg) => {
         window.alert(typeof msg === 'string' ? msg : 'Course deleted');
-        // reload current page (server-side)
         this.loadPage(this.page);
       },
       error: (err) => {
@@ -183,12 +171,10 @@ export class CoursesListComponent implements OnInit {
     });
   }
 
-  // small helper for truncating displayed units
   firstUnits(c: CourseModel, n = 2) {
     return (c.units || []).slice(0, n);
   }
 
-  // UI helpers for dropdown toggles (close on outside clicks can be added)
   toggleDropdown(name: 'board' | 'medium' | 'grade' | 'subject') {
     if (name === 'board') this.openBoardDropdown = !this.openBoardDropdown;
     if (name === 'medium') this.openMediumDropdown = !this.openMediumDropdown;

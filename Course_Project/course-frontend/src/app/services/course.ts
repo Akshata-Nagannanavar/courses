@@ -13,10 +13,10 @@ export interface Course {
   id?: string;
   name: string;
   description: string;
-  board: string[];
+  board: string;       // single string
   medium: string[];
   grade: string[];
-  subject: string;
+  subject: string[];   // multi-select array
   units?: Unit[];
 }
 
@@ -42,10 +42,10 @@ export class Course {
     size: number = 10,
     filters: {
       search?: string;
-      board?: string[];   // multiple allowed
-      medium?: string[];  // multiple allowed
-      grade?: string[];   // multiple allowed
-      subject?: string;   // single
+      board?: string;     // single
+      medium?: string[];
+      grade?: string[];
+      subject?: string[]; // multiple
     } = {}
   ): Observable<CoursePage> {
     let params = new HttpParams()
@@ -55,11 +55,10 @@ export class Course {
       .set('orderBy', 'name')
       .set('direction', 'asc');
 
-    // For backend that expects comma-separated multiple values:
-    if (filters.board && filters.board.length) params = params.set('board', filters.board.join(','));
+    if (filters.board) params = params.set('board', filters.board); // single
     if (filters.medium && filters.medium.length) params = params.set('medium', filters.medium.join(','));
     if (filters.grade && filters.grade.length) params = params.set('grade', filters.grade.join(','));
-    if (filters.subject) params = params.set('subject', filters.subject);
+    if (filters.subject && filters.subject.length) params = params.set('subject', filters.subject.join(','));
 
     return this.http.get<any>(`${this.baseUrl}`, { params }).pipe(
       map(response => ({
@@ -72,11 +71,7 @@ export class Course {
     );
   }
 
-  /**
-   * Fetch all courses (single call) to build filter lists.
-   * NOTE: this asks backend for a very large page size; backend must allow this or provide an /all endpoint.
-   * If your backend exposes an explicit endpoint for all courses, replace this URL accordingly.
-   */
+  /** Fetch all courses for filters */
   getAllForFilters(): Observable<Course[]> {
     const params = new HttpParams().set('page', '0').set('size', String(1000000));
     return this.http.get<any>(`${this.baseUrl}`, { params }).pipe(
