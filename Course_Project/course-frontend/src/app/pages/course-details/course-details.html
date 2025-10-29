@@ -85,7 +85,52 @@
         </div>
       </div>
 
-      <div class="buttons">
+
+      <div class="units-section mt-4">
+  <h5>Units</h5>
+
+  <!-- Add Unit Form -->
+  <div *ngIf="addingUnit; else addBtn">
+    <form [formGroup]="newUnitForm" (ngSubmit)="addUnit()">
+      <input formControlName="title" class="form-control mb-2" placeholder="Unit Title" />
+      <textarea formControlName="content" class="form-control mb-2" placeholder="Unit Content"></textarea>
+      <button class="btn btn-success btn-sm me-2" type="submit">Save Unit</button>
+      <button class="btn btn-secondary btn-sm" type="button" (click)="addingUnit=false">Cancel</button>
+    </form>
+  </div>
+  <ng-template #addBtn>
+    <button class="btn btn-outline-primary btn-sm mb-3" (click)="addingUnit=true">+ Add Unit</button>
+  </ng-template>
+
+  <!-- List of Units -->
+  <div *ngIf="units.length > 0; else noUnits">
+    <ul class="list-group">
+      <li *ngFor="let u of units; let i = index" class="list-group-item">
+        <div *ngIf="editingUnitIndex !== i">
+          <strong>{{ u.title }}</strong>: {{ u.content }}
+          <div class="float-end">
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="startEditUnit(i)">Edit</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteUnit(i)">Delete</button>
+          </div>
+        </div>
+
+        <!-- Inline Edit -->
+        <div *ngIf="editingUnitIndex === i">
+          <form [formGroup]="unitEditForm" (ngSubmit)="saveUnitEdit()">
+            <input class="form-control mb-2" formControlName="title" />
+            <textarea class="form-control mb-2" formControlName="content"></textarea>
+            <button type="submit" class="btn btn-success btn-sm me-2">Save</button>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="cancelUnitEdit()">Cancel</button>
+          </form>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noUnits>
+    <div class="text-muted small">No units yet.</div>
+  </ng-template>
+</div>
+ <div class="buttons">
         <button type="submit">Save</button>
         <button type="button" (click)="onCancel()">Cancel</button>
       </div>

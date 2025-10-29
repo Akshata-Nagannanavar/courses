@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Course } from '../../services/course';
-import type { Course as CourseModel } from '../../services/course';
+import type { Course as CourseModel, Unit } from '../../services/course';
 
 @Component({
   selector: 'app-course-details',
@@ -17,6 +17,13 @@ export class CourseDetailsComponent implements OnInit {
   courseData!: CourseModel;
   editMode = false;
   courseForm!: FormGroup;
+
+  // ✅ For Unit management
+  units: Unit[] = [];
+  editingUnitIndex: number | null = null;
+  unitEditForm!: FormGroup;
+  newUnitForm!: FormGroup;
+  addingUnit = false;
 
   // ✅ Dynamic filter data
   boards: string[] = [];
@@ -39,15 +46,21 @@ export class CourseDetailsComponent implements OnInit {
     this.courseId = this.route.snapshot.paramMap.get('id');
     if (this.courseId) {
       this.loadCourse();
+      this.loadUnits();
     }
 
-    // ✅ Build filter options dynamically like course-list
     this.courseService.getAllForFilters().subscribe({
       next: (all) => this.buildFiltersFromAll(all),
       error: (err) => {
         console.warn('Failed to fetch filter options:', err);
         this.buildFiltersFromAll([]);
       }
+    });
+
+    // Initialize new unit form
+    this.newUnitForm = this.fb.group({
+      title: ['', Validators.required],
+      content: ['', Validators.required]
     });
   }
 
@@ -77,6 +90,16 @@ export class CourseDetailsComponent implements OnInit {
       error: (err) => {
         console.error('Failed to load course:', err);
         alert('Failed to load course details!');
+      }
+    });
+  }
+
+  loadUnits(): void {
+    this.courseService.getUnitsForCourse(this.courseId!).subscribe({
+      next: (units) => (this.units = units || []),
+      error: (err) => {
+        console.error('Failed to load units:', err);
+        this.units = [];
       }
     });
   }
@@ -145,5 +168,83 @@ export class CourseDetailsComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/courses']);
+  }
+
+  // ===========================
+  // ✅ UNIT MANAGEMENT SECTION
+  // ===========================
+
+  startEditUnit(index: number): void {
+    const unit = this.units[index];
+    this.editingUnitIndex = index;
+    this.unitEditForm = this.fb.group({
+      title: [unit.title, Validators.required],
+      content: [unit.content, Validators.required]
+    });
+  }
+
+  saveUnitEdit(): void {
+    if (!this.courseId || this.editingUnitIndex === null) return;
+    if (this.unitEditForm.invalid) return;
+
+    const updatedUnit = this.unitEditForm.value;
+    const unitId = this.units[this.editingUnitIndex].id!;
+
+    this.courseService.updateUnit(this.courseId, unitId, updatedUnit).subscribe({
+      next: () => {
+        alert('✅ Unit updated successfully!');
+        this.editingUnitIndex = null;
+        this.loadUnits();
+      },
+      error: (err) => {
+        console.error('Unit update failed:', err);
+        alert('❌ Failed to update unit!');
+      }
+    });
+  }
+
+  cancelUnitEdit(): void {
+    this.editingUnitIndex = null;
+  }
+
+  deleteUnit(index: number): void {
+    const unit = this.units[index];
+    if (!this.courseId || !unit.id) return;
+
+    if (!confirm(`Delete unit "${unit.title}"?`)) return;
+
+    this.courseService.deleteUnit(this.courseId, unit.id).subscribe({
+      next: () => {
+        alert('🗑️ Unit deleted!');
+        this.loadUnits();
+      },
+      error: (err) => {
+        console.error('Unit deletion failed:', err);
+        alert('❌ Failed to delete unit!');
+      }
+    });
+  }
+
+  addUnit(): void {
+    if (!this.courseId) return;
+    if (this.newUnitForm.invalid) {
+      alert('Please fill all unit fields.');
+      return;
+    }
+
+    const newUnit = this.newUnitForm.value;
+
+    this.courseService.addUnitToCourse(this.courseId, newUnit).subscribe({
+      next: () => {
+        alert('✅ Unit added successfully!');
+        this.newUnitForm.reset();
+        this.addingUnit = false;
+        this.loadUnits();
+      },
+      error: (err) => {
+        console.error('Add unit failed:', err);
+        alert('❌ Failed to add unit!');
+      }
+    });
   }
 }
