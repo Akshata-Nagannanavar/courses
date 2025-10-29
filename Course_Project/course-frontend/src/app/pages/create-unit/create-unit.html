@@ -1,42 +1,88 @@
-<div class="create-unit-container">
-  <h2>Add Unit</h2>
+<div class="container my-4 create-unit-container">
+  <div class="card shadow-lg border-0">
+    <div class="card-body">
+      <h2 class="mb-4 text-center text-primary">
+        <i class="bi bi-journal-plus me-2"></i>Add Unit
+      </h2>
 
-  <form [formGroup]="unitForm" (ngSubmit)="onSubmit()" novalidate>
-    <!-- Select Course -->
-    <div class="form-group">
-      <label>Select Course <span>*</span></label>
-      <select formControlName="courseId">
-        <option value="">-- Select Course --</option>
-        <option *ngFor="let course of courses" [value]="course.id">
-          {{ course.name }}
-        </option>
-      </select>
-      <small *ngIf="unitForm.get('courseId')?.invalid && unitForm.get('courseId')?.touched">
-        Please select a course.
-      </small>
+      <form [formGroup]="unitForm" (ngSubmit)="onSubmit()" novalidate class="row g-3">
+        <!-- Select Course -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-book-half me-1 text-primary"></i> Select Course <span class="text-danger">*</span>
+          </label>
+          <select class="form-select" formControlName="courseId">
+            <option value="">-- Select Course --</option>
+            <option *ngFor="let course of courses" [value]="course.id">
+              {{ course.name }}
+            </option>
+          </select>
+          <div
+            class="form-text text-danger"
+            *ngIf="unitForm.get('courseId')?.invalid && unitForm.get('courseId')?.touched"
+          >
+            Please select a course.
+          </div>
+        </div>
+
+        <!-- Unit Title -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-pencil-square me-1 text-primary"></i> Unit Title
+            <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="title"
+            placeholder="Enter unit title"
+          />
+          <div
+            class="form-text text-danger"
+            *ngIf="unitForm.get('title')?.invalid && unitForm.get('title')?.touched"
+          >
+            Title is required.
+          </div>
+        </div>
+
+        <!-- Unit Content -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-card-text me-1 text-primary"></i> Unit Content
+            <span class="text-danger">*</span>
+          </label>
+          <textarea
+            class="form-control"
+            rows="4"
+            formControlName="content"
+            placeholder="Enter unit content"
+          ></textarea>
+          <div
+            class="form-text text-danger"
+            *ngIf="unitForm.get('content')?.invalid && unitForm.get('content')?.touched"
+          >
+            Content is required.
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="col-12 text-center mt-3">
+          <button
+            type="submit"
+            class="btn btn-primary px-4 py-2 fw-semibold"
+            [disabled]="unitForm.invalid"
+          >
+            <i class="bi bi-save me-1"></i> Add Unit
+          </button>
+        </div>
+      </form>
+
+      <!-- Back -->
+      <div class="text-center mt-4">
+        <button class="btn btn-outline-secondary px-4 py-2 fw-semibold" (click)="goBack()">
+          <i class="bi bi-arrow-left-circle me-1"></i> Back to Courses
+        </button>
+      </div>
     </div>
-
-    <!-- Unit Title -->
-    <div class="form-group">
-      <label>Unit Title <span>*</span></label>
-      <input type="text" formControlName="title" placeholder="Enter unit title" />
-      <small *ngIf="unitForm.get('title')?.invalid && unitForm.get('title')?.touched">
-        Title is required.
-      </small>
-    </div>
-
-    <!-- Unit Content -->
-    <div class="form-group">
-      <label>Unit Content <span>*</span></label>
-      <textarea formControlName="content" rows="4" placeholder="Enter unit content"></textarea>
-      <small *ngIf="unitForm.get('content')?.invalid && unitForm.get('content')?.touched">
-        Content is required.
-      </small>
-    </div>
-
-    <button type="submit" [disabled]="unitForm.invalid">Add Unit</button>
-  </form>
-
-  <br />
-  <button class="back-btn" (click)="goBack()">← Back to Courses</button>
+  </div>
 </div>

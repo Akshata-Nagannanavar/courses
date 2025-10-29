@@ -1,107 +1,170 @@
-<div class="create-course-container">
-  <h2>Create Course</h2>
+<div class="container my-4 create-course-container">
+  <div class="card shadow-lg border-0">
+    <div class="card-body">
+      <h2 class="mb-4 text-center text-primary">
+        <i class="bi bi-book-half me-2"></i>Create Course
+      </h2>
 
-  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" novalidate>
-    <!-- Course Name -->
-    <div class="form-group">
-      <label>Name <span>*</span></label>
-      <input type="text" formControlName="name" placeholder="Enter course name" />
-      <small *ngIf="courseForm.get('name')?.invalid && courseForm.get('name')?.touched">
-        Name is required
-      </small>
-    </div>
-
-    <!-- Description -->
-    <div class="form-group">
-      <label>Description <span>*</span></label>
-      <textarea
-        formControlName="description"
-        rows="3"
-        placeholder="Enter course description"
-      ></textarea>
-      <small *ngIf="courseForm.get('description')?.invalid && courseForm.get('description')?.touched">
-        Description is required
-      </small>
-    </div>
-
-    <!-- Board -->
-    <div class="form-group">
-      <label>Board <span>*</span></label>
-      <select formControlName="board">
-        <option value="">Select Board</option>
-        <option *ngFor="let b of filterBoards" [value]="b">{{ b }}</option>
-      </select>
-      <small *ngIf="courseForm.get('board')?.invalid && courseForm.get('board')?.touched">
-        Board is required
-      </small>
-    </div>
-
-    <!-- Medium -->
-    <div class="form-group">
-      <label>Medium <span>*</span></label>
-      <div class="checkbox-group">
-        <label *ngFor="let m of filterMediums">
+      <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" novalidate class="row g-3">
+        <!-- Course Name -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-pencil-square me-1 text-primary"></i> Name
+            <span class="text-danger">*</span>
+          </label>
           <input
-            type="checkbox"
-            [value]="m"
-            (change)="onCheckboxChange($event, 'medium')"
-            [checked]="selectedMediums.includes(m)"
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Enter course name"
           />
-          {{ m }}
-        </label>
-      </div>
+          <div
+            class="form-text text-danger"
+            *ngIf="courseForm.get('name')?.invalid && courseForm.get('name')?.touched"
+          >
+            Name is required
+          </div>
+        </div>
 
-      <div *ngIf="selectedMediums.length" class="selected-list">
-        <h4>Selected Mediums:</h4>
-        <div class="selected-item" *ngFor="let m of selectedMediums">{{ m }}</div>
+        <!-- Description -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-card-text me-1 text-primary"></i> Description
+            <span class="text-danger">*</span>
+          </label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            rows="3"
+            placeholder="Enter course description"
+          ></textarea>
+          <div
+            class="form-text text-danger"
+            *ngIf="courseForm.get('description')?.invalid && courseForm.get('description')?.touched"
+          >
+            Description is required
+          </div>
+        </div>
+
+        <!-- Board -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-mortarboard me-1 text-primary"></i> Board
+            <span class="text-danger">*</span>
+          </label>
+          <select class="form-select" formControlName="board">
+            <option value="">Select Board</option>
+            <option *ngFor="let b of filterBoards" [value]="b">{{ b }}</option>
+          </select>
+          <div
+            class="form-text text-danger"
+            *ngIf="courseForm.get('board')?.invalid && courseForm.get('board')?.touched"
+          >
+            Board is required
+          </div>
+        </div>
+
+        <!-- Medium -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-translate me-1 text-primary"></i> Medium
+            <span class="text-danger">*</span>
+          </label>
+          <div class="checkbox-group d-flex flex-wrap gap-3 mt-1">
+            <div *ngFor="let m of filterMediums" class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [value]="m"
+                (change)="onCheckboxChange($event, 'medium')"
+                [checked]="selectedMediums.includes(m)"
+                id="medium-{{ m }}"
+              />
+              <label class="form-check-label" for="medium-{{ m }}">{{ m }}</label>
+            </div>
+          </div>
+          <div *ngIf="selectedMediums.length" class="selected-list mt-2">
+            <h6 class="fw-semibold">
+              <i class="bi bi-collection me-1"></i> Selected Mediums:
+            </h6>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-info text-dark" *ngFor="let m of selectedMediums">{{ m }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grade -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-list-ol me-1 text-primary"></i> Grade
+            <span class="text-danger">*</span>
+          </label>
+          <div class="checkbox-group d-flex flex-wrap gap-3 mt-1">
+            <div *ngFor="let g of filterGrades" class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [value]="g"
+                (change)="onCheckboxChange($event, 'grade')"
+                [checked]="selectedGrades.includes(g)"
+                id="grade-{{ g }}"
+              />
+              <label class="form-check-label" for="grade-{{ g }}">{{ g }}</label>
+            </div>
+          </div>
+          <div *ngIf="selectedGrades.length" class="selected-list mt-2">
+            <h6 class="fw-semibold"><i class="bi bi-list-check me-1"></i> Selected Grades:</h6>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-primary" *ngFor="let g of selectedGrades">{{ g }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subject -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-journal-text me-1 text-primary"></i> Subjects
+            <span class="text-danger">*</span>
+          </label>
+          <div class="checkbox-group d-flex flex-wrap gap-3 mt-1">
+            <div *ngFor="let s of filterSubjects" class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [value]="s"
+                (change)="onCheckboxChange($event, 'subject')"
+                [checked]="selectedSubjects.includes(s)"
+                id="subject-{{ s }}"
+              />
+              <label class="form-check-label" for="subject-{{ s }}">{{ s }}</label>
+            </div>
+          </div>
+          <div *ngIf="selectedSubjects.length" class="selected-list mt-2">
+            <h6 class="fw-semibold"><i class="bi bi-bookmarks me-1"></i> Selected Subjects:</h6>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-secondary" *ngFor="let s of selectedSubjects">{{ s }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="col-12 text-center mt-3">
+          <button
+            type="submit"
+            class="btn btn-primary px-4 py-2 fw-semibold"
+            [disabled]="courseForm.invalid"
+          >
+            <i class="bi bi-save me-1"></i> Create Course
+          </button>
+        </div>
+      </form>
+
+      <!-- Add Unit -->
+      <div class="text-center mt-4">
+        <button class="btn btn-success px-4 py-2 fw-semibold unit-btn" (click)="goToCreateUnit()">
+          <i class="bi bi-plus-circle me-1"></i> Add Unit
+        </button>
       </div>
     </div>
-
-    <!-- Grade -->
-    <div class="form-group">
-      <label>Grade <span>*</span></label>
-      <div class="checkbox-group">
-        <label *ngFor="let g of filterGrades">
-          <input
-            type="checkbox"
-            [value]="g"
-            (change)="onCheckboxChange($event, 'grade')"
-            [checked]="selectedGrades.includes(g)"
-          />
-          {{ g }}
-        </label>
-      </div>
-
-      <div *ngIf="selectedGrades.length" class="selected-list">
-        <h4>Selected Grades:</h4>
-        <div class="selected-item" *ngFor="let g of selectedGrades">{{ g }}</div>
-      </div>
-    </div>
-
-    <!-- Subject -->
-    <div class="form-group">
-      <label>Subjects <span>*</span></label>
-      <div class="checkbox-group">
-        <label *ngFor="let s of filterSubjects">
-          <input
-            type="checkbox"
-            [value]="s"
-            (change)="onCheckboxChange($event, 'subject')"
-            [checked]="selectedSubjects.includes(s)"
-          />
-          {{ s }}
-        </label>
-      </div>
-
-      <div *ngIf="selectedSubjects.length" class="selected-list">
-        <h4>Selected Subjects:</h4>
-        <div class="selected-item" *ngFor="let s of selectedSubjects">{{ s }}</div>
-      </div>
-    </div>
-
-    <button type="submit" [disabled]="courseForm.invalid">Create Course</button>
-  </form>
-
-  <br />
-  <button class="unit-btn" (click)="goToCreateUnit()">+ Add Unit</button>
+  </div>
 </div>

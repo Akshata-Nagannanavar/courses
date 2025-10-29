@@ -59,6 +59,7 @@ export class CoursesListComponent implements OnInit {
     });
   }
 
+
   // ✅ Extract unique filters from all courses
   buildFiltersFromAll(allCourses: CourseModel[]) {
     const boards = new Set<string>();

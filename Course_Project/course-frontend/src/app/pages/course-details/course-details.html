@@ -1,139 +1,192 @@
-<div class="course-details-container" *ngIf="courseData">
-  <h2>{{ courseData.name }}</h2>
+<div class="container my-4" *ngIf="courseData as course">
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body">
+      <!-- ===== Course Header ===== -->
+      <h2 class="card-title text-center text-primary fw-bold mb-4">
+        <i class="bi bi-journal-text me-2"></i>{{ course.name }}
+      </h2>
 
+      <!-- ===== View Mode ===== -->
+      <div *ngIf="!editMode">
+        <p><i class="bi bi-card-text me-2 text-success"></i><strong>Description:</strong> {{ course.description }}</p>
+        <p><i class="bi bi-building me-2 text-info"></i><strong>Board:</strong> {{ course.board }}</p>
+        <p><i class="bi bi-translate me-2 text-warning"></i><strong>Mediums:</strong> {{ course.medium.join(', ') }}</p>
+        <p><i class="bi bi-mortarboard me-2 text-danger"></i><strong>Grades:</strong> {{ course.grade.join(', ') }}</p>
+        <p><i class="bi bi-book-half me-2 text-primary"></i><strong>Subjects:</strong> {{ course.subject.join(', ') }}</p>
 
-  <div class="card">
-    <div *ngIf="!editMode">
-      <p><strong>Description:</strong> {{ courseData.description }}</p>
-      <p><strong>Board:</strong> {{ courseData.board }}</p>
-      <p><strong>Mediums:</strong> {{ courseData.medium.join(', ') }}</p>
-      <p><strong>Grades:</strong> {{ courseData.grade.join(', ') }}</p>
-      <p><strong>Subjects:</strong> {{ courseData.subject.join(', ') }}</p>
+        <!-- ===== Units Section ===== -->
+        <div class="mt-4" *ngIf="course.units && course.units.length > 0; else noUnits">
+          <h5 class="fw-semibold text-primary mb-2"><i class="bi bi-diagram-3 me-2"></i>Units</h5>
+          <ul class="list-group">
+            <li *ngFor="let u of course.units" class="list-group-item">
+              <strong>{{ u.title }}</strong>: {{ u.content }}
+            </li>
+          </ul>
+        </div>
+        <ng-template #noUnits>
+          <div class="text-muted small mt-2">No units added yet.</div>
+        </ng-template>
 
-
-
-       <div class="units mb-3" *ngIf="courseData.units && courseData.units.length > 0; else noUnits">
-                <strong>Units:</strong>
-                <ul class="mb-0">
-                  <li *ngFor="let u of courseData.units"><strong>{{ u.title }}</strong>: {{ u.content }}</li>
-                </ul>
-              </div>
-              <ng-template #noUnits>
-                <div class="small text-muted">No units</div>
-              </ng-template>
-
-      <div class="buttons">
-        <button (click)="toggleEdit()">Edit</button>
-        <button (click)="goBack()">Back</button>
-      </div>
-    </div>
-
-    <form *ngIf="editMode" [formGroup]="courseForm" (ngSubmit)="onSave()">
-      <label>
-        Course Name:
-        <input formControlName="name" type="text" />
-      </label>
-
-      <label>
-        Description:
-        <textarea formControlName="description"></textarea>
-      </label>
-
-      <label>
-        Board:
-        <select formControlName="board">
-          <option *ngFor="let b of boards" [value]="b">{{ b }}</option>
-        </select>
-      </label>
-
-      <div class="multi-select">
-        <strong>Mediums:</strong>
-        <div *ngFor="let m of mediums">
-          <input
-            type="checkbox"
-            [value]="m"
-            [checked]="selectedMediums.includes(m)"
-            (change)="onCheckboxChange($event, 'medium')"
-          />
-          {{ m }}
+        <!-- ===== Buttons ===== -->
+        <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
+          <button class="btn btn-outline-primary" (click)="toggleEdit()">
+            <i class="bi bi-pencil-square me-1"></i>Edit
+          </button>
+          <button class="btn btn-outline-secondary" (click)="goBack()">
+            <i class="bi bi-arrow-left me-1"></i>Back
+          </button>
         </div>
       </div>
 
-      <div class="multi-select">
-        <strong>Grades:</strong>
-        <div *ngFor="let g of grades">
-          <input
-            type="checkbox"
-            [value]="g"
-            [checked]="selectedGrades.includes(g)"
-            (change)="onCheckboxChange($event, 'grade')"
-          />
-          {{ g }}
+      <!-- ===== Edit Mode ===== -->
+      <form *ngIf="editMode" [formGroup]="courseForm" (ngSubmit)="onSave()" class="mt-3">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-journal-text me-2 text-primary"></i>Course Name
+          </label>
+          <input formControlName="name" type="text" class="form-control" />
         </div>
-      </div>
 
-      <div class="multi-select">
-        <strong>Subjects:</strong>
-        <div *ngFor="let s of subjects">
-          <input
-            type="checkbox"
-            [value]="s"
-            [checked]="selectedSubjects.includes(s)"
-            (change)="onCheckboxChange($event, 'subject')"
-          />
-          {{ s }}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-card-text me-2 text-success"></i>Description
+          </label>
+          <textarea formControlName="description" class="form-control"></textarea>
         </div>
-      </div>
 
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-building me-2 text-info"></i>Board
+          </label>
+          <select formControlName="board" class="form-select">
+            <option *ngFor="let b of boards" [value]="b">{{ b }}</option>
+          </select>
+        </div>
 
-      <div class="units-section mt-4">
-  <h5>Units</h5>
-
-  <!-- Add Unit Form -->
-  <div *ngIf="addingUnit; else addBtn">
-    <form [formGroup]="newUnitForm" (ngSubmit)="addUnit()">
-      <input formControlName="title" class="form-control mb-2" placeholder="Unit Title" />
-      <textarea formControlName="content" class="form-control mb-2" placeholder="Unit Content"></textarea>
-      <button class="btn btn-success btn-sm me-2" type="submit">Save Unit</button>
-      <button class="btn btn-secondary btn-sm" type="button" (click)="addingUnit=false">Cancel</button>
-    </form>
-  </div>
-  <ng-template #addBtn>
-    <button class="btn btn-outline-primary btn-sm mb-3" (click)="addingUnit=true">+ Add Unit</button>
-  </ng-template>
-
-  <!-- List of Units -->
-  <div *ngIf="units.length > 0; else noUnits">
-    <ul class="list-group">
-      <li *ngFor="let u of units; let i = index" class="list-group-item">
-        <div *ngIf="editingUnitIndex !== i">
-          <strong>{{ u.title }}</strong>: {{ u.content }}
-          <div class="float-end">
-            <button class="btn btn-sm btn-outline-primary me-2" (click)="startEditUnit(i)">Edit</button>
-            <button class="btn btn-sm btn-outline-danger" (click)="deleteUnit(i)">Delete</button>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-translate me-2 text-warning"></i>Mediums
+          </label>
+          <div class="form-check" *ngFor="let m of mediums">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [value]="m"
+              [checked]="selectedMediums.includes(m)"
+              (change)="onCheckboxChange($event, 'medium')"
+            />
+            <label class="form-check-label">{{ m }}</label>
           </div>
         </div>
 
-        <!-- Inline Edit -->
-        <div *ngIf="editingUnitIndex === i">
-          <form [formGroup]="unitEditForm" (ngSubmit)="saveUnitEdit()">
-            <input class="form-control mb-2" formControlName="title" />
-            <textarea class="form-control mb-2" formControlName="content"></textarea>
-            <button type="submit" class="btn btn-success btn-sm me-2">Save</button>
-            <button type="button" class="btn btn-secondary btn-sm" (click)="cancelUnitEdit()">Cancel</button>
-          </form>
-        </div>
-      </li>
-    </ul>
+       <div class="mb-3">
+  <label class="form-label fw-semibold d-block">
+    <i class="bi bi-mortarboard me-2 text-danger"></i>Grades
+  </label>
+
+  <div class="form-check form-check-inline" *ngFor="let g of grades">
+    <input
+      type="checkbox"
+      class="form-check-input"
+      [value]="g"
+      [checked]="selectedGrades.includes(g)"
+      (change)="onCheckboxChange($event, 'grade')"
+    />
+    <label class="form-check-label">{{ g }}</label>
   </div>
-  <ng-template #noUnits>
-    <div class="text-muted small">No units yet.</div>
-  </ng-template>
 </div>
- <div class="buttons">
-        <button type="submit">Save</button>
-        <button type="button" (click)="onCancel()">Cancel</button>
-      </div>
-    </form>
+
+
+        <div class="mb-3">
+  <label class="form-label fw-semibold d-block">
+    <i class="bi bi-book-half me-2 text-primary"></i>Subjects
+  </label>
+
+  <div class="form-check form-check-inline" *ngFor="let s of subjects">
+    <input
+      type="checkbox"
+      class="form-check-input"
+      [value]="s"
+      [checked]="selectedSubjects.includes(s)"
+      (change)="onCheckboxChange($event, 'subject')"
+    />
+    <label class="form-check-label">{{ s }}</label>
+  </div>
+</div>
+
+
+        <!-- ===== Units Section ===== -->
+        <div class="mt-4">
+          <h5 class="text-primary fw-semibold mb-3">
+            <i class="bi bi-diagram-3 me-2"></i>Units
+          </h5>
+
+          <div *ngIf="addingUnit; else addUnitButton">
+            <form [formGroup]="newUnitForm" (ngSubmit)="addUnit()" class="mb-3">
+              <input formControlName="title" class="form-control mb-2" placeholder="Unit Title" />
+              <textarea formControlName="content" class="form-control mb-2" placeholder="Unit Content"></textarea>
+              <button type="submit" class="btn btn-success btn-sm me-2">
+                <i class="bi bi-check-circle me-1"></i>Save
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" (click)="addingUnit=false">
+                <i class="bi bi-x-circle me-1"></i>Cancel
+              </button>
+            </form>
+          </div>
+
+          <ng-template #addUnitButton>
+            <button class="btn btn-outline-primary btn-sm mb-3" (click)="addingUnit=true">
+              <i class="bi bi-plus-circle me-1"></i>Add Unit
+            </button>
+          </ng-template>
+
+          <div *ngIf="units && units.length > 0; else noUnitsEdit">
+            <ul class="list-group">
+              <li *ngFor="let u of units; let i = index" class="list-group-item">
+                <div *ngIf="editingUnitIndex !== i">
+                  <strong>{{ u.title }}</strong>: {{ u.content }}
+                  <div class="float-end">
+                    <button class="btn btn-sm btn-outline-primary me-2" (click)="startEditUnit(i)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteUnit(i)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Inline Edit -->
+                <div *ngIf="editingUnitIndex === i">
+                  <form [formGroup]="unitEditForm" (ngSubmit)="saveUnitEdit()">
+                    <input class="form-control mb-2" formControlName="title" />
+                    <textarea class="form-control mb-2" formControlName="content"></textarea>
+                    <button type="submit" class="btn btn-success btn-sm me-2">
+                      <i class="bi bi-check2"></i> Save
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" (click)="cancelUnitEdit()">
+                      <i class="bi bi-x-circle"></i> Cancel
+                    </button>
+                  </form>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <ng-template #noUnitsEdit>
+            <div class="text-muted small">No units yet.</div>
+          </ng-template>
+        </div>
+
+        <!-- ===== Form Buttons ===== -->
+        <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-save me-1"></i>Save
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">
+            <i class="bi bi-x-circle me-1"></i>Cancel
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
