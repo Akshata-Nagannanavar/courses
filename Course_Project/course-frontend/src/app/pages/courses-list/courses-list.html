@@ -1,11 +1,15 @@
-<div class="courses-layout container py-4">
+<div class="main-wrapper">
   <!-- Page Title -->
+  <!-- Colored container including heading + search/add row -->
+<div class="p-4 mb-4 rounded shadow-sm" style="background-color:  #d8f0ff;">
+
+  <!-- Page Header -->
   <div class="page-header text-center mb-4">
     <h2>Course Management System</h2>
   </div>
 
   <!-- Search + Add Course Row -->
-  <div class="d-flex justify-content-center align-items-center mb-4 flex-wrap gap-2">
+  <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
     <input
       type="text"
       class="form-control"
@@ -18,6 +22,10 @@
       <i class="bi bi-plus-circle"></i> Add Course
     </button>
   </div>
+
+</div>
+
+
 
   <div class="row">
     <!-- LEFT: Filters -->
@@ -143,9 +151,20 @@
 
     <!-- RIGHT: Cards + pagination -->
     <main class="col-12 col-md-9 order-0 order-md-1">
-      <div *ngIf="loading" class="alert alert-info">Loading courses...</div>
-      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-      <div *ngIf="!loading && courses.length === 0" class="alert alert-info">No courses found.</div>
+
+  <div *ngIf="loading" class="alert alert-info text-center fw-semibold shadow-sm py-4 px-3 rounded">
+    Loading courses...
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger text-center fw-semibold shadow-sm py-4 px-3 rounded">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && courses.length === 0" class="alert alert-info text-center fw-semibold shadow-sm py-4 px-3 rounded">
+    No courses found.
+  </div>
+
+
 
       <div class="row g-3" *ngIf="courses.length > 0">
         <div class="col-12 col-md-6 col-lg-4" *ngFor="let course of courses">
@@ -182,13 +201,13 @@
 
               <div class="mt-auto d-flex gap-2">
                 <button
-                  class="btn btn-sm btn-outline-primary flex-grow-1 d-flex align-items-center justify-content-center gap-2"
+                  class="btn btn-sm btn-primary flex-grow-1 d-flex align-items-center justify-content-center gap-2"
                   (click)="$event.stopPropagation(); editCourse(course.id)"
                 >
                   <i class="bi bi-pencil-square"></i> Edit
                 </button>
                 <button
-                  class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center gap-2"
+                  class="btn btn-sm btn-danger d-flex align-items-center justify-content-center gap-2"
                   (click)="deleteCourse(course.id, course.name); $event.stopPropagation();"
                 >
                   <i class="bi bi-trash"></i> Delete

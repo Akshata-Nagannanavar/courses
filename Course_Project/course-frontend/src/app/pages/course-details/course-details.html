@@ -1,8 +1,14 @@
 <div class="container my-4" *ngIf="courseData as course">
   <div class="card shadow-lg border-0 rounded-4">
+
+    <!-- ===== Back Button Top-Left ===== -->
+    <button class="btn btn-secondary btn-back" (click)="goBack()">
+      <i class="bi bi-arrow-left me-1"></i>Back
+    </button>
+
     <div class="card-body">
       <!-- ===== Course Header ===== -->
-      <h2 class="card-title text-center text-primary fw-bold mb-4">
+      <h2 class="card-title text-primary fw-bold mb-4">
         <i class="bi bi-journal-text me-2"></i>{{ course.name }}
       </h2>
 
@@ -26,100 +32,118 @@
         <ng-template #noUnits>
           <div class="text-muted small mt-2">No units added yet.</div>
         </ng-template>
-
-        <!-- ===== Buttons ===== -->
-        <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
-          <button class="btn btn-outline-primary" (click)="toggleEdit()">
-            <i class="bi bi-pencil-square me-1"></i>Edit
-          </button>
-          <button class="btn btn-outline-secondary" (click)="goBack()">
-            <i class="bi bi-arrow-left me-1"></i>Back
-          </button>
-        </div>
+<br>
+        <!-- ===== Edit Button Bottom-Right ===== -->
+        <button class="btn btn-primary btn-edit" (click)="toggleEdit()">
+          <i class="bi bi-pencil-square me-1"></i>Edit
+        </button>
       </div>
 
       <!-- ===== Edit Mode ===== -->
       <form *ngIf="editMode" [formGroup]="courseForm" (ngSubmit)="onSave()" class="mt-3">
+
         <div class="mb-3">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-journal-text me-2 text-primary"></i>Course Name
-          </label>
+          <label class="form-label fw-semibold"><i class="bi bi-journal-text me-2 text-primary"></i>Course Name</label>
           <input formControlName="name" type="text" class="form-control" />
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-card-text me-2 text-success"></i>Description
-          </label>
+          <label class="form-label fw-semibold"><i class="bi bi-card-text me-2 text-success"></i>Description</label>
           <textarea formControlName="description" class="form-control"></textarea>
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-building me-2 text-info"></i>Board
-          </label>
+          <label class="form-label fw-semibold"><i class="bi bi-building me-2 text-info"></i>Board</label>
           <select formControlName="board" class="form-select">
             <option *ngFor="let b of boards" [value]="b">{{ b }}</option>
           </select>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-translate me-2 text-warning"></i>Mediums
-          </label>
-          <div class="form-check" *ngFor="let m of mediums">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              [value]="m"
-              [checked]="selectedMediums.includes(m)"
-              (change)="onCheckboxChange($event, 'medium')"
-            />
-            <label class="form-check-label">{{ m }}</label>
-          </div>
-        </div>
-
-       <div class="mb-3">
+        <!-- ===== Mediums (Multi-select dropdown) ===== -->
+<div class="mb-3 position-relative">
   <label class="form-label fw-semibold d-block">
-    <i class="bi bi-mortarboard me-2 text-danger"></i>Grades
+    <i class="bi bi-translate me-2 text-warning"></i>Mediums
   </label>
+  <div class="dropdown-container">
+    <div class="dropdown-toggle-btn" (click)="toggleDropdown('mediums')">
+      {{ selectedMediums.length ? selectedMediums.join(', ') : 'Select Mediums' }}
+      <i class="bi" [class.bi-chevron-up]="openDropdown === 'mediums'" [class.bi-chevron-down]="openDropdown !== 'mediums'"></i>
+    </div>
 
-  <div class="form-check form-check-inline" *ngFor="let g of grades">
-    <input
-      type="checkbox"
-      class="form-check-input"
-      [value]="g"
-      [checked]="selectedGrades.includes(g)"
-      (change)="onCheckboxChange($event, 'grade')"
-    />
-    <label class="form-check-label">{{ g }}</label>
+    <div class="dropdown-panel" *ngIf="openDropdown === 'mediums'" (click)="$event.stopPropagation()">
+      <div *ngFor="let m of mediums" class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          [value]="m"
+          [checked]="selectedMediums.includes(m)"
+          (change)="onCheckboxChange($event, 'medium')"
+          id="medium-{{m}}"
+        />
+        <label class="form-check-label ms-2" for="medium-{{m}}">{{ m }}</label>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- ===== Grades (Multi-select dropdown) ===== -->
+<div class="mb-3 position-relative">
+  <label class="form-label fw-semibold d-block">
+    <i class="bi bi-mortarboard me-2 text-danger"></i>Grades
+  </label>
+  <div class="dropdown-container">
+    <div class="dropdown-toggle-btn" (click)="toggleDropdown('grades')">
+      {{ selectedGrades.length ? selectedGrades.join(', ') : 'Select Grades' }}
+      <i class="bi" [class.bi-chevron-up]="openDropdown === 'grades'" [class.bi-chevron-down]="openDropdown !== 'grades'"></i>
+    </div>
 
-        <div class="mb-3">
+    <div class="dropdown-panel" *ngIf="openDropdown === 'grades'" (click)="$event.stopPropagation()">
+      <div *ngFor="let g of grades" class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          [value]="g"
+          [checked]="selectedGrades.includes(g)"
+          (change)="onCheckboxChange($event, 'grade')"
+          id="grade-{{g}}"
+        />
+        <label class="form-check-label ms-2" for="grade-{{g}}">{{ g }}</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Subjects (Multi-select dropdown) ===== -->
+<div class="mb-3 position-relative">
   <label class="form-label fw-semibold d-block">
     <i class="bi bi-book-half me-2 text-primary"></i>Subjects
   </label>
+  <div class="dropdown-container">
+    <div class="dropdown-toggle-btn" (click)="toggleDropdown('subjects')">
+      {{ selectedSubjects.length ? selectedSubjects.join(', ') : 'Select Subjects' }}
+      <i class="bi" [class.bi-chevron-up]="openDropdown === 'subjects'" [class.bi-chevron-down]="openDropdown !== 'subjects'"></i>
+    </div>
 
-  <div class="form-check form-check-inline" *ngFor="let s of subjects">
-    <input
-      type="checkbox"
-      class="form-check-input"
-      [value]="s"
-      [checked]="selectedSubjects.includes(s)"
-      (change)="onCheckboxChange($event, 'subject')"
-    />
-    <label class="form-check-label">{{ s }}</label>
+    <div class="dropdown-panel" *ngIf="openDropdown === 'subjects'" (click)="$event.stopPropagation()">
+      <div *ngFor="let s of subjects" class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          [value]="s"
+          [checked]="selectedSubjects.includes(s)"
+          (change)="onCheckboxChange($event, 'subject')"
+          id="subject-{{s}}"
+        />
+        <label class="form-check-label ms-2" for="subject-{{s}}">{{ s }}</label>
+      </div>
+    </div>
   </div>
 </div>
 
 
         <!-- ===== Units Section ===== -->
         <div class="mt-4">
-          <h5 class="text-primary fw-semibold mb-3">
-            <i class="bi bi-diagram-3 me-2"></i>Units
-          </h5>
+          <h5 class="text-primary fw-semibold mb-3"><i class="bi bi-diagram-3 me-2"></i>Units</h5>
 
           <div *ngIf="addingUnit; else addUnitButton">
             <form [formGroup]="newUnitForm" (ngSubmit)="addUnit()" class="mb-3">
@@ -135,7 +159,7 @@
           </div>
 
           <ng-template #addUnitButton>
-            <button class="btn btn-outline-primary btn-sm mb-3" (click)="addingUnit=true">
+            <button class="btn btn-primary btn-sm mb-3" (click)="addingUnit=true">
               <i class="bi bi-plus-circle me-1"></i>Add Unit
             </button>
           </ng-template>
@@ -146,10 +170,10 @@
                 <div *ngIf="editingUnitIndex !== i">
                   <strong>{{ u.title }}</strong>: {{ u.content }}
                   <div class="float-end">
-                    <button class="btn btn-sm btn-outline-primary me-2" (click)="startEditUnit(i)">
+                    <button class="btn btn-sm btn-primary me-2" (click)="startEditUnit(i)">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" (click)="deleteUnit(i)">
+                    <button class="btn btn-sm btn-danger" (click)="deleteUnit(i)">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>

@@ -2,11 +2,16 @@
   max-width: 900px;
 }
 
+// .card {
+//   border-radius: 12px;
+//   background: #fff;
+// }
 .card {
+  position: relative; /* Make the card a positioning context */
   border-radius: 12px;
   background: #fff;
+  padding: 3rem; /* optional: leave space for the button if needed */
 }
-
 h2 {
   font-weight: 600;
 }
@@ -27,4 +32,56 @@ h2 {
   .d-flex.gap-2 {
     flex-wrap: wrap;
   }
+
+}
+
+
+/* Bottom-right Edit button */
+.btn-edit {
+  position: absolute;
+  bottom: 1rem; /* distance from bottom of card */
+  right: 1rem;  /* distance from right of card */
+}
+
+.btn-back {
+  position: absolute;
+  top: 1rem;   /* distance from top of card */
+  left: 1rem;  /* distance from left of card */
+}
+
+.dropdown-container {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-toggle-btn {
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-toggle-btn:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  margin-top: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 0.5rem;
 }

@@ -42,7 +42,11 @@
   .btn-primary:hover {
     background-color: #0b5ed7;
   }
-
+.btn-back {
+  position: absolute;
+  top: 1rem;   /* distance from top of card */
+  left: 1rem;  /* distance from left of card */
+}
   .btn-outline-secondary {
     border-width: 2px;
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,6 +17,8 @@ export class CourseDetailsComponent implements OnInit {
   courseData!: CourseModel;
   editMode = false;
   courseForm!: FormGroup;
+
+openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
 
   // ✅ For Unit management
   units: Unit[] = [];
@@ -202,6 +204,18 @@ export class CourseDetailsComponent implements OnInit {
       }
     });
   }
+  toggleDropdown(type: 'mediums' | 'grades' | 'subjects') {
+  this.openDropdown = this.openDropdown === type ? null : type;
+}
+
+// Close dropdown when clicking outside
+@HostListener('document:click', ['$event'])
+onClickOutside(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  if (!target.closest('.dropdown-container')) {
+    this.openDropdown = null;
+  }
+}
 
   cancelUnitEdit(): void {
     this.editingUnitIndex = null;
@@ -248,3 +262,5 @@ export class CourseDetailsComponent implements OnInit {
     });
   }
 }
+
+

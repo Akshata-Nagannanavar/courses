@@ -35,6 +35,8 @@ export class CreateUnitComponent implements OnInit {
   loadCourses(): void {
     this.course.getAllForFilters().subscribe({
       next: (data) => {
+
+
         this.courses = data;
       },
       error: (err) => {
@@ -46,9 +48,12 @@ export class CreateUnitComponent implements OnInit {
 
   /** Submit Unit */
   onSubmit(): void {
+     console.log('🟢 onSubmit() triggered');
     if (this.unitForm.valid) {
       const { courseId, title, content } = this.unitForm.value;
+      console.log('Selected Course ID:', courseId);
       const newUnit: Unit = { title, content };
+
 
       this.course.addUnitToCourse(courseId, newUnit).subscribe({
         next: (res) => {
@@ -68,5 +73,8 @@ export class CreateUnitComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/courses']);
+  }
+   goBack1(): void {
+    this.router.navigate(['/createCourse']);
   }
 }

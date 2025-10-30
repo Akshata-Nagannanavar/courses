@@ -1,5 +1,9 @@
 <div class="container my-4 create-unit-container">
   <div class="card shadow-lg border-0">
+     <!-- ===== Back Button Top-Left ===== -->
+    <button class="btn btn-secondary btn-back" (click)="goBack1()">
+      <i class="bi bi-arrow-left me-1"></i>Back
+    </button>
     <div class="card-body">
       <h2 class="mb-4 text-center text-primary">
         <i class="bi bi-journal-plus me-2"></i>Add Unit
@@ -9,7 +13,8 @@
         <!-- Select Course -->
         <div class="col-12">
           <label class="form-label fw-semibold">
-            <i class="bi bi-book-half me-1 text-primary"></i> Select Course <span class="text-danger">*</span>
+            <i class="bi bi-book-half me-1 text-primary"></i> Select Course
+            <span class="text-danger">*</span>
           </label>
           <select class="form-select" formControlName="courseId">
             <option value="">-- Select Course --</option>
@@ -79,7 +84,7 @@
 
       <!-- Back -->
       <div class="text-center mt-4">
-        <button class="btn btn-outline-secondary px-4 py-2 fw-semibold" (click)="goBack()">
+        <button class="btn btn-secondary px-4 py-2 fw-semibold" (click)="goBack()">
           <i class="bi bi-arrow-left-circle me-1"></i> Back to Courses
         </button>
       </div>

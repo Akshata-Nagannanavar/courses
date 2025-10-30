@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,6 +23,8 @@ export class CreateCourseComponent implements OnInit {
   selectedMediums: string[] = [];
   selectedGrades: string[] = [];
   selectedSubjects: string[] = [];
+
+  dropdownOpen = { medium: false, grade: false, subject: false };
 
   constructor(
     private fb: FormBuilder,
@@ -100,6 +102,21 @@ export class CreateCourseComponent implements OnInit {
       alert('Please fill all required fields.');
     }
   }
+goBack(): void {
+    this.router.navigate(['/courses']);
+  }
+
+toggleDropdown(type: 'medium' | 'grade' | 'subject', event: MouseEvent) {
+  event.stopPropagation();
+  this.dropdownOpen[type] = !this.dropdownOpen[type];
+}
+
+// Close dropdowns when clicking outside
+@HostListener('document:click')
+closeAllDropdowns() {
+  this.dropdownOpen = { medium: false, grade: false, subject: false };
+}
+
 
   goToCreateUnit() {
     this.router.navigate(['/createUnit']);

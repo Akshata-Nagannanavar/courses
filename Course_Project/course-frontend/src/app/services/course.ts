@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
-// ---------------------
+
 // Model Interfaces
-// ---------------------
+
 export interface Unit {
   id?: string;
   title: string;
@@ -30,15 +30,15 @@ export interface CoursePage {
   message: string;
 }
 
-// ---------------------
+
 // Injectable Service
-// ---------------------
+
 @Injectable({
   providedIn: 'root'
 })
 export class Course {
-  private baseUrl = 'http://localhost:8080/api/courses';
-  private baseMetaUrl = 'http://localhost:8080/api/meta';
+  private baseUrl = '/api/courses';
+  private baseMetaUrl = '/api/meta';
 
   constructor(private http: HttpClient) {}
 

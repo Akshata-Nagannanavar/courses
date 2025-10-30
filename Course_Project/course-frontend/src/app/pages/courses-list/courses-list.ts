@@ -19,7 +19,7 @@ export class CoursesListComponent implements OnInit {
   error: string | null = null;
 
   // pagination
-  pageSize = 5;
+  pageSize = 6;
   page = 0;
   totalPages = 0;
   totalElements = 0;
@@ -229,19 +229,24 @@ export class CoursesListComponent implements OnInit {
     this.router.navigate(['/editCourse', courseId]);
   }
 
-  deleteCourse(courseId?: string, courseName?: string): void {
-    if (!courseId) return;
-    const ok = window.confirm(`Delete course "${courseName || ''}"? This cannot be undone.`);
-    if (!ok) return;
+ deleteCourse(courseId?: string, courseName?: string): void {
+  if (!courseId) return;
 
-    this.courseService.deleteCourse(courseId).subscribe({
-      next: () => this.loadPage(this.page),
-      error: (err) => {
-        console.error('Failed to delete', err);
-        window.alert('Failed to delete course.');
-      }
-    });
-  }
+  const ok = window.confirm(`Delete course "${courseName || ''}"? This cannot be undone.`);
+  if (!ok) return;
+
+  this.courseService.deleteCourse(courseId).subscribe({
+    next: () => {
+      this.loadPage(this.page);
+      window.alert(`Course "${courseName || ''}" deleted successfully.`);
+    },
+    error: (err) => {
+      console.error('Failed to delete', err);
+      window.alert('Failed to delete course.');
+    }
+  });
+}
+
 
   // course details navigation
   goToCourseDetails(id: string | undefined): void {
