@@ -20,14 +20,14 @@ export class CourseDetailsComponent implements OnInit {
 
 openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
 
-  // ✅ For Unit management
+  //  For Unit management
   units: Unit[] = [];
   editingUnitIndex: number | null = null;
   unitEditForm!: FormGroup;
   newUnitForm!: FormGroup;
   addingUnit = false;
 
-  // ✅ Dynamic filter data
+  //  Dynamic filter data
   boards: string[] = [];
   mediums: string[] = [];
   grades: string[] = [];
@@ -172,9 +172,8 @@ openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
     this.router.navigate(['/courses']);
   }
 
-  // ===========================
-  // ✅ UNIT MANAGEMENT SECTION
-  // ===========================
+
+  //  UNIT MANAGEMENT SECTION
 
   startEditUnit(index: number): void {
     const unit = this.units[index];

@@ -2,15 +2,11 @@
   max-width: 900px;
 }
 
-// .card {
-//   border-radius: 12px;
-//   background: #fff;
-// }
 .card {
-  position: relative; /* Make the card a positioning context */
+  position: relative;
   border-radius: 12px;
   background: #fff;
-  padding: 3rem; /* optional: leave space for the button if needed */
+  padding: 3rem;
 }
 h2 {
   font-weight: 600;

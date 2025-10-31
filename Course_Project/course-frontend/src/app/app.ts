@@ -7,13 +7,11 @@ import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet,FormsModule,CommonModule],
-  //,CoursesList,CreateCourse,CreateUnit
+
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-// export class App {
-//   protected readonly title = signal('course-frontend');
-// }
+
 export class App{
 
 }

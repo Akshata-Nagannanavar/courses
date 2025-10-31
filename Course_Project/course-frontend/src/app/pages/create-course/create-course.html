@@ -1,9 +1,10 @@
 <div class="container my-4 create-course-container">
   <div class="card shadow-lg border-0">
-     <!-- ===== Back Button Top-Left ===== -->
+    <!-- Back Button -->
     <button class="btn btn-secondary btn-back" (click)="goBack()">
-      <i class="bi bi-arrow-left me-1"></i>Back
+      <i class="bi bi-arrow-left me-1"></i> Back
     </button>
+
     <div class="card-body">
       <h2 class="mb-4 text-center text-primary">
         <i class="bi bi-book-half me-2"></i>Create Course
@@ -67,95 +68,100 @@
             Board is required
           </div>
         </div>
-        <!-- ====== Medium (Multi-select Dropdown) ====== -->
-<div class="mb-3 position-relative">
-  <label class="form-label fw-semibold">
-    <i class="bi bi-translate me-2 text-warning"></i>Mediums
-  </label>
 
-  <div class="dropdown-multi">
-    <div class="form-select" (click)="toggleDropdown('medium', $event)">
-      {{ selectedMediums.length ? selectedMediums.join(', ') : 'Select mediums' }}
-    </div>
-    <ul class="dropdown-menu show" *ngIf="dropdownOpen.medium" (click)="$event.stopPropagation()">
-      <li *ngFor="let m of filterMediums">
-        <label class="dropdown-item d-flex align-items-center">
-          <input
-            type="checkbox"
-            class="form-check-input me-2"
-            [value]="m"
-            [checked]="selectedMediums.includes(m)"
-            (change)="onCheckboxChange($event, 'medium')"
-          />
-          {{ m }}
-        </label>
-      </li>
-    </ul>
-  </div>
-</div>
+        <!-- Medium -->
+        <div class="mb-3 position-relative">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-translate me-2 text-warning"></i> Mediums
+            <span class="text-danger">*</span>
+          </label>
 
-<!-- ====== Grades (Multi-select Dropdown) ====== -->
-<div class="mb-3 position-relative">
-  <label class="form-label fw-semibold">
-    <i class="bi bi-mortarboard me-2 text-danger"></i>Grades
-  </label>
+          <div class="dropdown-multi">
+            <div class="form-select" (click)="toggleDropdown('medium', $event)">
+              {{ selectedMediums.length ? selectedMediums.join(', ') : 'Select mediums' }}
+            </div>
+            <ul class="dropdown-menu show" *ngIf="dropdownOpen.medium" (click)="$event.stopPropagation()">
+              <li *ngFor="let m of filterMediums">
+                <label class="dropdown-item d-flex align-items-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input me-2"
+                    [value]="m"
+                    [checked]="selectedMediums.includes(m)"
+                    (change)="onCheckboxChange($event, 'medium')"
+                  />
+                  {{ m }}
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="form-text text-danger" *ngIf="mediumInvalid">At least one medium is required</div>
+        </div>
 
-  <div class="dropdown-multi">
-    <div class="form-select" (click)="toggleDropdown('grade', $event)">
-      {{ selectedGrades.length ? selectedGrades.join(', ') : 'Select grades' }}
-    </div>
-    <ul class="dropdown-menu show" *ngIf="dropdownOpen.grade" (click)="$event.stopPropagation()">
-      <li *ngFor="let g of filterGrades">
-        <label class="dropdown-item d-flex align-items-center">
-          <input
-            type="checkbox"
-            class="form-check-input me-2"
-            [value]="g"
-            [checked]="selectedGrades.includes(g)"
-            (change)="onCheckboxChange($event, 'grade')"
-          />
-          {{ g }}
-        </label>
-      </li>
-    </ul>
-  </div>
-</div>
+        <!-- Grades -->
+        <div class="mb-3 position-relative">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-mortarboard me-2 text-danger"></i> Grades
+            <span class="text-danger">*</span>
+          </label>
 
-<!-- ====== Subjects (Multi-select Dropdown) ====== -->
-<div class="mb-3 position-relative">
-  <label class="form-label fw-semibold">
-    <i class="bi bi-book-half me-2 text-primary"></i>Subjects
-  </label>
+          <div class="dropdown-multi">
+            <div class="form-select" (click)="toggleDropdown('grade', $event)">
+              {{ selectedGrades.length ? selectedGrades.join(', ') : 'Select grades' }}
+            </div>
+            <ul class="dropdown-menu show" *ngIf="dropdownOpen.grade" (click)="$event.stopPropagation()">
+              <li *ngFor="let g of filterGrades">
+                <label class="dropdown-item d-flex align-items-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input me-2"
+                    [value]="g"
+                    [checked]="selectedGrades.includes(g)"
+                    (change)="onCheckboxChange($event, 'grade')"
+                  />
+                  {{ g }}
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="form-text text-danger" *ngIf="gradeInvalid">At least one grade is required</div>
+        </div>
 
-  <div class="dropdown-multi">
-    <div class="form-select" (click)="toggleDropdown('subject', $event)">
-      {{ selectedSubjects.length ? selectedSubjects.join(', ') : 'Select subjects' }}
-    </div>
-    <ul class="dropdown-menu show" *ngIf="dropdownOpen.subject" (click)="$event.stopPropagation()">
-      <li *ngFor="let s of filterSubjects">
-        <label class="dropdown-item d-flex align-items-center">
-          <input
-            type="checkbox"
-            class="form-check-input me-2"
-            [value]="s"
-            [checked]="selectedSubjects.includes(s)"
-            (change)="onCheckboxChange($event, 'subject')"
-          />
-          {{ s }}
-        </label>
-      </li>
-    </ul>
-  </div>
-</div>
+        <!-- Subjects -->
+        <div class="mb-3 position-relative">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-book-half me-2 text-primary"></i> Subjects
+            <span class="text-danger">*</span>
+          </label>
 
-
+          <div class="dropdown-multi">
+            <div class="form-select" (click)="toggleDropdown('subject', $event)">
+              {{ selectedSubjects.length ? selectedSubjects.join(', ') : 'Select subjects' }}
+            </div>
+            <ul class="dropdown-menu show" *ngIf="dropdownOpen.subject" (click)="$event.stopPropagation()">
+              <li *ngFor="let s of filterSubjects">
+                <label class="dropdown-item d-flex align-items-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input me-2"
+                    [value]="s"
+                    [checked]="selectedSubjects.includes(s)"
+                    (change)="onCheckboxChange($event, 'subject')"
+                  />
+                  {{ s }}
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="form-text text-danger" *ngIf="subjectInvalid">At least one subject is required</div>
+        </div>
 
         <!-- Submit -->
         <div class="col-12 text-center mt-3">
           <button
             type="submit"
             class="btn btn-primary px-4 py-2 fw-semibold"
-            [disabled]="courseForm.invalid"
+            [disabled]="!isFormValid()"
           >
             <i class="bi bi-save me-1"></i> Create Course
           </button>

@@ -1,18 +1,18 @@
 <div class="container my-4" *ngIf="courseData as course">
   <div class="card shadow-lg border-0 rounded-4">
 
-    <!-- ===== Back Button Top-Left ===== -->
+    <!-->  Back Button Top-Left  -->
     <button class="btn btn-secondary btn-back" (click)="goBack()">
       <i class="bi bi-arrow-left me-1"></i>Back
     </button>
 
     <div class="card-body">
-      <!-- ===== Course Header ===== -->
+      <!--  Course Header  -->
       <h2 class="card-title text-primary fw-bold mb-4">
         <i class="bi bi-journal-text me-2"></i>{{ course.name }}
       </h2>
 
-      <!-- ===== View Mode ===== -->
+      <!--  View Mode  -->
       <div *ngIf="!editMode">
         <p><i class="bi bi-card-text me-2 text-success"></i><strong>Description:</strong> {{ course.description }}</p>
         <p><i class="bi bi-building me-2 text-info"></i><strong>Board:</strong> {{ course.board }}</p>
@@ -20,7 +20,7 @@
         <p><i class="bi bi-mortarboard me-2 text-danger"></i><strong>Grades:</strong> {{ course.grade.join(', ') }}</p>
         <p><i class="bi bi-book-half me-2 text-primary"></i><strong>Subjects:</strong> {{ course.subject.join(', ') }}</p>
 
-        <!-- ===== Units Section ===== -->
+        <!--  Units Section  -->
         <div class="mt-4" *ngIf="course.units && course.units.length > 0; else noUnits">
           <h5 class="fw-semibold text-primary mb-2"><i class="bi bi-diagram-3 me-2"></i>Units</h5>
           <ul class="list-group">
@@ -33,13 +33,13 @@
           <div class="text-muted small mt-2">No units added yet.</div>
         </ng-template>
 <br>
-        <!-- ===== Edit Button Bottom-Right ===== -->
+        <!--  Edit Button Bottom-Right  -->
         <button class="btn btn-primary btn-edit" (click)="toggleEdit()">
           <i class="bi bi-pencil-square me-1"></i>Edit
         </button>
       </div>
 
-      <!-- ===== Edit Mode ===== -->
+      <!--  Edit Mode  -->
       <form *ngIf="editMode" [formGroup]="courseForm" (ngSubmit)="onSave()" class="mt-3">
 
         <div class="mb-3">
@@ -59,7 +59,7 @@
           </select>
         </div>
 
-        <!-- ===== Mediums (Multi-select dropdown) ===== -->
+        <!--  Mediums (Multi-select dropdown)  -->
 <div class="mb-3 position-relative">
   <label class="form-label fw-semibold d-block">
     <i class="bi bi-translate me-2 text-warning"></i>Mediums
@@ -86,7 +86,7 @@
   </div>
 </div>
 
-<!-- ===== Grades (Multi-select dropdown) ===== -->
+<!--  Grades (Multi-select dropdown)  -->
 <div class="mb-3 position-relative">
   <label class="form-label fw-semibold d-block">
     <i class="bi bi-mortarboard me-2 text-danger"></i>Grades
@@ -113,7 +113,7 @@
   </div>
 </div>
 
-<!-- ===== Subjects (Multi-select dropdown) ===== -->
+<!--  Subjects (Multi-select dropdown)  -->
 <div class="mb-3 position-relative">
   <label class="form-label fw-semibold d-block">
     <i class="bi bi-book-half me-2 text-primary"></i>Subjects
@@ -141,7 +141,7 @@
 </div>
 
 
-        <!-- ===== Units Section ===== -->
+        <!--  Units Section  -->
         <div class="mt-4">
           <h5 class="text-primary fw-semibold mb-3"><i class="bi bi-diagram-3 me-2"></i>Units</h5>
 
@@ -201,7 +201,7 @@
           </ng-template>
         </div>
 
-        <!-- ===== Form Buttons ===== -->
+        <!--  Form Buttons  -->
         <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
           <button type="submit" class="btn btn-success">
             <i class="bi bi-save me-1"></i>Save

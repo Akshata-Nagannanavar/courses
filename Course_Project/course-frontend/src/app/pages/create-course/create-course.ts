@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener} from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -46,10 +46,7 @@ export class CreateCourseComponent implements OnInit {
   }
 
   private buildFiltersFromAll(allCourses: CourseModel[]) {
-    const b = new Set<string>();
-    const m = new Set<string>();
-    const g = new Set<string>();
-    const s = new Set<string>();
+    const b = new Set<string>(), m = new Set<string>(), g = new Set<string>(), s = new Set<string>();
 
     for (const c of allCourses || []) {
       if (c.board) b.add(c.board);
@@ -58,10 +55,30 @@ export class CreateCourseComponent implements OnInit {
       (c.subject || []).forEach(x => x && s.add(x));
     }
 
-    this.filterBoards = Array.from(b).sort();
-    this.filterMediums = Array.from(m).sort();
-    this.filterGrades = Array.from(g).sort();
-    this.filterSubjects = Array.from(s).sort();
+    this.filterBoards = [...b].sort();
+    this.filterMediums = [...m].sort();
+    this.filterGrades = [...g].sort();
+    this.filterSubjects = [...s].sort();
+  }
+
+  get mediumInvalid() {
+    return this.courseForm.touched && this.selectedMediums.length === 0;
+  }
+  get gradeInvalid() {
+    return this.courseForm.touched && this.selectedGrades.length === 0;
+  }
+  get subjectInvalid() {
+    return this.courseForm.touched && this.selectedSubjects.length === 0;
+  }
+
+  /**  Combined validation for button disable */
+  isFormValid(): boolean {
+    return (
+      this.courseForm.valid &&
+      this.selectedMediums.length > 0 &&
+      this.selectedGrades.length > 0 &&
+      this.selectedSubjects.length > 0
+    );
   }
 
   onCheckboxChange(event: any, field: 'medium' | 'grade' | 'subject') {
@@ -69,54 +86,52 @@ export class CreateCourseComponent implements OnInit {
     const checked = event.target.checked;
     const selectedArray =
       field === 'medium' ? this.selectedMediums :
-      field === 'grade' ? this.selectedGrades : this.selectedSubjects;
+      field === 'grade' ? this.selectedGrades :
+      this.selectedSubjects;
 
-    if (checked && !selectedArray.includes(value)) {
-      selectedArray.push(value);
-    } else if (!checked) {
-      const index = selectedArray.indexOf(value);
-      if (index > -1) selectedArray.splice(index, 1);
-    }
+    if (checked && !selectedArray.includes(value)) selectedArray.push(value);
+    else if (!checked) selectedArray.splice(selectedArray.indexOf(value), 1);
   }
 
   onSubmit() {
-    if (this.courseForm.valid) {
-      const newCourse: CourseModel = {
-        ...this.courseForm.value,
-        medium: this.selectedMediums,
-        grade: this.selectedGrades,
-        subject: this.selectedSubjects
-      };
-
-      this.courseService.createCourse(newCourse).subscribe({
-        next: (res) => {
-          alert('✅ Course created successfully!');
-          this.router.navigate(['/courses']);
-        },
-        error: (err) => {
-          console.error('Error creating course:', err);
-          alert('❌ Failed to create course!');
-        }
-      });
-    } else {
-      alert('Please fill all required fields.');
+    if (!this.isFormValid()) {
+      this.courseForm.markAllAsTouched();
+      alert('⚠️ Please fill all required fields including Medium, Grade, and Subject.');
+      return;
     }
+
+    const newCourse: CourseModel = {
+      ...this.courseForm.value,
+      medium: this.selectedMediums,
+      grade: this.selectedGrades,
+      subject: this.selectedSubjects
+    };
+
+    this.courseService.createCourse(newCourse).subscribe({
+      next: () => {
+        alert('✅ Course created successfully!');
+        this.router.navigate(['/courses']);
+      },
+      error: (err) => {
+        console.error('Error creating course:', err);
+        alert('❌ Failed to create course!');
+      }
+    });
   }
-goBack(): void {
+
+  goBack(): void {
     this.router.navigate(['/courses']);
   }
 
-toggleDropdown(type: 'medium' | 'grade' | 'subject', event: MouseEvent) {
-  event.stopPropagation();
-  this.dropdownOpen[type] = !this.dropdownOpen[type];
-}
+  toggleDropdown(type: 'medium' | 'grade' | 'subject', event: MouseEvent) {
+    event.stopPropagation();
+    this.dropdownOpen[type] = !this.dropdownOpen[type];
+  }
 
-// Close dropdowns when clicking outside
-@HostListener('document:click')
-closeAllDropdowns() {
-  this.dropdownOpen = { medium: false, grade: false, subject: false };
-}
-
+  @HostListener('document:click')
+  closeAllDropdowns() {
+    this.dropdownOpen = { medium: false, grade: false, subject: false };
+  }
 
   goToCreateUnit() {
     this.router.navigate(['/createUnit']);

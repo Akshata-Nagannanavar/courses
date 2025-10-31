@@ -15,10 +15,10 @@ export interface Course {
   id?: string;
   name: string;
   description: string;
-  board: string;        // single string
-  medium: string[];     // multiple
-  grade: string[];      // multiple
-  subject: string[];    // multiple
+  board: string;
+  medium: string[];
+  grade: string[];
+  subject: string[];
   units?: Unit[];
 }
 
@@ -42,7 +42,7 @@ export class Course {
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Get paginated & filtered list of courses
+  //  Get paginated & filtered list of courses
   getAllCourses(
     page: number = 0,
     size: number = 10,
@@ -77,7 +77,7 @@ export class Course {
     );
   }
 
-  // 🔹 Fetch all courses (no pagination, for dropdowns)
+  //  Fetch all courses (no pagination, for dropdowns)
   getAllForFilters(): Observable<Course[]> {
     const params = new HttpParams().set('page', '0').set('size', String(1000000));
     return this.http.get<any>(this.baseUrl, { params }).pipe(
@@ -85,7 +85,7 @@ export class Course {
     );
   }
 
-  // 🔹 CRUD for Courses
+  //  CRUD for Courses
   createCourse(course: Course): Observable<Course> {
     return this.http.post<any>(this.baseUrl, course).pipe(map(r => r?.result?.data || null));
   }
@@ -106,9 +106,9 @@ export class Course {
     return this.http.delete<any>(`${this.baseUrl}/${id}`).pipe(map(r => r?.result?.message || 'Course deleted'));
   }
 
-  // ---------------------
-  // 🔸 Units CRUD (per Course)
-  // ---------------------
+
+  //  Units CRUD (per Course)
+
 
   /** Add Unit to a Course */
   addUnitToCourse(courseId: string, unit: Unit): Observable<Unit> {
@@ -146,7 +146,7 @@ export class Course {
     );
   }
 
-  /** -------------------- Dropdown Meta Data -------------------- */
+  /** - Dropdown Meta Data - */
   getBoards(): Observable<string[]> {
     return this.http.get<string[]>(`${this.baseMetaUrl}/boards`);
   }

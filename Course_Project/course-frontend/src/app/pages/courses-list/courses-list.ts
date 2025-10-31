@@ -60,7 +60,7 @@ export class CoursesListComponent implements OnInit {
   }
 
 
-  // ✅ Extract unique filters from all courses
+  //  Extract unique filters from all courses
   buildFiltersFromAll(allCourses: CourseModel[]) {
     const boards = new Set<string>();
     const mediums = new Set<string>();
@@ -82,7 +82,7 @@ export class CoursesListComponent implements OnInit {
     this.filterSubjects = Array.from(subjects).sort();
   }
 
-  // ✅ Paginated fetch with filters
+  //  Paginated fetch with filters
   loadPage(pageIndex: number = 0) {
   this.loading = true;
   this.error = null;
@@ -134,7 +134,7 @@ export class CoursesListComponent implements OnInit {
           c.description?.toLowerCase().includes(this.searchTerm.toLowerCase())
         );
 
-      // 🧮 Pagination after filtering
+      //  Pagination after filtering
       this.totalElements = filtered.length;
       this.totalPages = Math.ceil(this.totalElements / this.pageSize);
       const start = pageIndex * this.pageSize;
