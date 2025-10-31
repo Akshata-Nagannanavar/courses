@@ -95,12 +95,12 @@ export class CoursesListComponent implements OnInit {
     subject: Array.from(this.selectedSubjects)
   };
 
-  // First, fetch ALL courses (not paginated) to apply frontend filtering
+  // First, fetch ALL courses to apply frontend filtering
   this.courseService.getAllForFilters().subscribe({
     next: (allCourses) => {
       let filtered = allCourses;
 
-      // 🔍 Apply filters manually in frontend
+      //  Apply filters
       if (this.selectedBoard)
         filtered = filtered.filter(c => c.board === this.selectedBoard);
 
@@ -153,13 +153,13 @@ export class CoursesListComponent implements OnInit {
 }
 
 
-  // 🔍 Search
+  //  Search
   onSearchChange(): void {
     this.page = 0;
     this.loadPage(0);
   }
 
-  // 🎯 Dropdown toggles
+  //  Dropdown toggles
   toggleDropdown(name: 'board' | 'medium' | 'grade' | 'subject') {
     // close others when one is open
     this.openBoardDropdown = name === 'board' ? !this.openBoardDropdown : false;
@@ -168,7 +168,7 @@ export class CoursesListComponent implements OnInit {
     this.openSubjectDropdown = name === 'subject' ? !this.openSubjectDropdown : false;
   }
 
-  // ✅ Board select (single)
+  //  Board select (single)
   selectBoard(board: string): void {
     this.selectedBoard = this.selectedBoard === board ? '' : board;
     this.openBoardDropdown = false;
@@ -190,7 +190,7 @@ export class CoursesListComponent implements OnInit {
 }
 
 
-  // 🔄 Clear filters
+  //  Clear filters
   clearAllFilters(): void {
     this.selectedBoard = '';
     this.selectedMediums.clear();
