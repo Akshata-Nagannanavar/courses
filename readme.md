@@ -1,4 +1,83 @@
-# Course Management Backend
+
+
+
+# COURSE MANAGEMENT SYSTEM
+
+A full-stack web application for managing Courses and Units, built with Spring Boot (backend) and Angular (frontend).  
+It supports creating, viewing, updating, and deleting courses and their units with pagination, filtering, and caching.
+
+## 🧩 Project Structure
+```
+Course_Project/
+│
+├── backend/               # Spring Boot REST API
+│   ├── src/
+│   ├── pom.xml
+│   └── README.md (this file)
+│
+├── frontend/              # Angular frontend
+│   ├── src/
+│   ├── package.json
+│   ├── angular.json
+│   └── README.md
+│
+└── docker-compose.yml     # For containerized setup
+```
+
+#  Frontend (Angular)
+
+The frontend is built using Angular 20 and communicates with the backend via REST API endpoints.  
+It provides a responsive UI for creating, editing, and managing courses and their units.
+
+---
+
+##  Features
+
+* Create and view courses with filters for board, medium, grade, and subject.
+* Add, edit, and delete units for each course.
+* Search, pagination, and sorting of courses.
+* Dynamic UI updates after CRUD operations.
+* Uses Angular Reactive Forms and Services for API communication.
+* Environment-based configuration for API URLs.
+* Centralized error handling and loading indicators.
+
+---
+
+##  Tech Stack
+
+* Framework: Angular 20
+* Language: TypeScript
+* UI: HTML5, SCSS,  Bootstrap 
+* HTTP Client: Angular HttpClient
+* Routing: Angular Router
+
+
+## 🧭 Components Overview
+
+| Component | Description |
+|------------|-------------|
+| `course-list` | Displays list of courses with filters and pagination |
+| `create-course` | Form to create a new course |
+| `create-unit` | Add units to a selected course |
+| `course-details` | View and manage specific course  |
+
+---
+
+## 🧰 Scripts
+
+Run these inside the `course-frontend/` directory:
+
+| Command | Description |
+|----------|-------------|
+| `npm install` | Install dependencies |
+| `ng serve` | Run app in development mode (`http://localhost:4200`) |
+| `ng build` | Build the production-ready app in `dist/` |
+| `ng test` | Run unit tests with Jasmine and Karma |
+
+---
+
+#  Backend
+>>>>>>> 1c080ae1 (Updated readme.md)
 
 A Spring Boot REST API for managing Courses and Units, supporting CRUD operations, filtering, pagination, and caching.
 
