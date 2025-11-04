@@ -36,7 +36,7 @@ public class CourseController {
             @RequestParam(required = false) String grade,
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "6") int size,
             @RequestParam(defaultValue = "name") String orderBy,
             @RequestParam(defaultValue = "asc") String direction
     ) {
