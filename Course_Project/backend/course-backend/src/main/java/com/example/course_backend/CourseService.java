@@ -27,11 +27,6 @@ public class CourseService {
 @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
 public Course createCourse(Course course) {
 
-    // ✅ Convert incoming Strings → Enums
-//    if (course.getBoard() instanceof String strBoard) {
-//        course.setBoard(Board.valueOf(strBoard.toUpperCase()));
-//    }
-
     if (course.getMedium() != null) {
         course.setMedium(course.getMedium().stream()
                 .map(Object::toString)

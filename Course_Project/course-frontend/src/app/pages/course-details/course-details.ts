@@ -51,7 +51,7 @@ export class CourseDetailsComponent implements OnInit {
       this.loadUnits();
     }
 
-    // ✅ Load backend ENUMS ✅
+    //  Load backend ENUMS ✅
     this.courseService.getEnums().subscribe({
       next: (data) => {
         this.boards = data.boards;
@@ -138,7 +138,7 @@ export class CourseDetailsComponent implements OnInit {
 
     this.courseService.updateCourse(this.courseId!, updatedCourse).subscribe({
       next: () => {
-        alert('✅ Course updated successfully!');
+        alert(' Course updated successfully!');
         this.editMode = false;
         this.loadCourse();
       },
@@ -175,11 +175,11 @@ export class CourseDetailsComponent implements OnInit {
 
     this.courseService.updateUnit(this.courseId, unitId, updatedUnit).subscribe({
       next: () => {
-        alert('✅ Unit updated successfully!');
+        alert(' Unit updated successfully!');
         this.editingUnitIndex = null;
         this.loadUnits();
       },
-      error: () => alert('❌ Failed to update unit!')
+      error: () => alert(' Failed to update unit!')
     });
   }
 
@@ -207,10 +207,10 @@ export class CourseDetailsComponent implements OnInit {
 
     this.courseService.deleteUnit(this.courseId, unit.id).subscribe({
       next: () => {
-        alert('🗑️ Unit deleted!');
+        alert(' Unit deleted!');
         this.loadUnits();
       },
-      error: () => alert('❌ Failed to delete unit!')
+      error: () => alert(' Failed to delete unit!')
     });
   }
 
@@ -225,12 +225,12 @@ export class CourseDetailsComponent implements OnInit {
 
     this.courseService.addUnitToCourse(this.courseId, newUnit).subscribe({
       next: () => {
-        alert('✅ Unit added successfully!');
+        alert(' Unit added successfully!');
         this.newUnitForm.reset();
         this.addingUnit = false;
         this.loadUnits();
       },
-      error: () => alert('❌ Failed to add unit!')
+      error: () => alert(' Failed to add unit!')
     });
   }
 }

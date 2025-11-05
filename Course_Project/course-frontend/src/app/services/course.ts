@@ -44,7 +44,9 @@ export interface CoursePage {
   providedIn: 'root'
 })
 export class Course {
-  private baseUrl = '/api/courses';
+ private baseUrl = '/api/courses';
+ // private baseUrl = 'http://localhost:8080/api/courses';
+
 
 
   constructor(private http: HttpClient) {}

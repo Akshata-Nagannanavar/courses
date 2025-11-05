@@ -1,46 +1,3 @@
-#version: '3.8'
-#
-#services:
-#
-#  backend:
-#    container_name: course_backend
-#    build:
-#      context: ./backend/course-backend
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8080:8080"
-#    env_file:
-#      - .env
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-#      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
-#      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-#    extra_hosts:
-#      - "host.docker.internal:host-gateway"
-#    restart: always
-#    networks:
-#      - course_network
-#
-#
-#  frontend:
-#    container_name: course_frontend
-#    build:
-#      context: ./course-frontend
-#      dockerfile: Dockerfile
-#    ports:
-#      - "4200:80"
-#    depends_on:
-#      - backend
-#    restart: always
-#    networks:
-#      - course_network
-#
-#
-#networks:
-#  course_network:
-#    driver: bridge
-#
-
 
 
 services:
@@ -83,14 +40,14 @@ services:
     container_name: course_frontend
     build:
       context: ./course-frontend
-      dockerfile: Dockerfile
     ports:
-      - "4200:80"
+      - "4200:4200"
     depends_on:
       - backend
     restart: always
     networks:
       - course_network
+
 
 networks:
   course_network:

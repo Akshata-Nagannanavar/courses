@@ -1,155 +1,161 @@
 <div class="main-wrapper">
   <!-- Page Title -->
 
-<div class="p-4 mb-4 rounded shadow-sm" style="background-color:  #d8f0ff;">
+  <div class="p-4 mb-4 rounded shadow-sm" style="background-color:  #d8f0ff;">
 
-  <!-- Page Header -->
-  <div class="page-header text-center mb-4">
-    <h2>Course Management System</h2>
+    <!-- Page Header -->
+    <div class="page-header text-center mb-4">
+      <h2>Course Management System</h2>
+    </div>
+
+    <!-- Search + Add Course Row -->
+    <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
+      <input
+        type="text"
+        class="form-control"
+        style="max-width: 400px;"
+        placeholder="Search courses..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()"
+      />
+      <button class="btn btn-primary" (click)="goToCreateCourse()">
+        <i class="bi bi-plus-circle"></i> Add Course
+      </button>
+    </div>
+
   </div>
-
-  <!-- Search + Add Course Row -->
-  <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
-    <input
-      type="text"
-      class="form-control"
-      style="max-width: 400px;"
-      placeholder="Search courses..."
-      [(ngModel)]="searchTerm"
-      (input)="onSearchChange()"
-    />
-    <button class="btn btn-primary" (click)="goToCreateCourse()">
-      <i class="bi bi-plus-circle"></i> Add Course
-    </button>
-  </div>
-
-</div>
-
-
 
   <div class="row">
     <!-- Filters Section -->
-<aside class="col-12 col-md-3 mb-3">
-  <div class="filters p-3 bg-white rounded shadow-sm">
+    <aside class="col-12 col-md-3 mb-3">
+      <div class="filters p-3 bg-white rounded shadow-sm">
 
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <h5 class="m-0"><i class="bi bi-funnel"></i> Filters</h5>
-      <button class="btn btn-sm btn-link" (click)="clearAllFilters()">Clear</button>
-    </div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="m-0"><i class="bi bi-funnel"></i> Filters</h5>
+          <button class="btn btn-sm btn-link" (click)="clearAllFilters()">Clear</button>
+        </div>
 
-    <!-- Board (Single-select) -->
-    <div class="mb-3">
-      <label class="form-label small">Board</label>
-      <select class="form-select" [(ngModel)]="selectedBoard" (change)="loadPage(0)">
-        <option value="">Select board</option>
-        <option *ngFor="let b of filterBoards" [value]="b">{{ b }}</option>
-      </select>
-    </div>
+        <!-- Board (Single-select dropdown) -->
+        <div class="mb-3 dropdown-container">
+          <label class="form-label small"><i class="bi bi-bank me-1"></i> Board</label>
+          <div class="dropdown">
+            <button
+              class="btn btn-outline-secondary w-100 dropdown-toggle text-start d-flex justify-content-between align-items-center"
+              type="button"
+              (click)="toggleDropdown('board')"
+            >
+              <span>{{ selectedBoard || 'Select Board' }}</span>
+            </button>
 
+            <div class="dropdown-menu w-100" [class.show]="openBoardDropdown" style="max-height: 300px; overflow-y: auto;">
+              <div
+                *ngFor="let b of filterBoards"
+                class="dropdown-item px-2 py-1"
+                [class.selected]="selectedBoard === b"
+                (click)="selectBoard(b)"
+              >
+                {{ b }}
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <!-- Medium (Multi-select with checkboxes) -->
-<div class="mb-3 dropdown-container">
-  <label class="form-label small">Medium</label>
-  <div class="dropdown">
-    <button
-      class="btn btn-outline-secondary w-100 dropdown-toggle text-start d-flex justify-content-between align-items-center"
-      type="button"
-      (click)="toggleDropdown('medium')">
-      <span>{{ selectedMediums.size ? toArray(selectedMediums).join(', ') : 'Select Mediums' }}</span>
-    </button>
-    <div class="dropdown-menu w-100" [class.show]="openMediumDropdown">
-      <div *ngFor="let m of filterMediums" class="form-check px-2 py-1">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          [id]="'medium-' + m"
-          [checked]="selectedMediums.has(m)"
-          (change)="toggleSet(selectedMediums, m)"
-        />
-        <label class="form-check-label" [for]="'medium-' + m">{{ m }}</label>
+        <!-- Medium (Multi-select with checkboxes) -->
+        <div class="mb-3 dropdown-container">
+          <label class="form-label small"><i class="bi bi-translate me-1"></i> Medium</label>
+          <div class="dropdown">
+            <button
+              class="btn btn-outline-secondary w-100 dropdown-toggle text-start d-flex justify-content-between align-items-center"
+              type="button"
+              (click)="toggleDropdown('medium')">
+              <span>{{ selectedMediums.size ? toArray(selectedMediums).join(', ') : 'Select Mediums' }}</span>
+            </button>
+            <div class="dropdown-menu w-100" [class.show]="openMediumDropdown">
+              <div *ngFor="let m of filterMediums" class="form-check px-2 py-1">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="'medium-' + m"
+                  [checked]="selectedMediums.has(m)"
+                  (change)="toggleSet(selectedMediums, m)"
+                />
+                <label class="form-check-label" [for]="'medium-' + m">{{ m }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grade -->
+        <div class="mb-3 dropdown-container">
+          <label class="form-label small"><i class="bi bi-mortarboard-fill me-1"></i> Grade</label>
+          <div class="dropdown">
+            <button
+              class="btn btn-outline-secondary w-100 dropdown-toggle text-start d-flex justify-content-between align-items-center"
+              type="button"
+              (click)="toggleDropdown('grade')">
+              <span>{{ selectedGrades.size ? toArray(selectedGrades).join(', ') : 'Select Grades' }}</span>
+            </button>
+            <div class="dropdown-menu w-100" [class.show]="openGradeDropdown">
+              <div *ngFor="let g of filterGrades" class="form-check px-2 py-1">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="'grade-' + g"
+                  [checked]="selectedGrades.has(g)"
+                  (change)="toggleSet(selectedGrades, g)"
+                />
+                <label class="form-check-label" [for]="'grade-' + g">{{ g }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subject -->
+        <div class="mb-3 dropdown-container">
+          <label class="form-label small"><i class="bi bi-book-half me-1"></i> Subject</label>
+          <div class="dropdown">
+            <button
+              class="btn btn-outline-secondary w-100 dropdown-toggle text-start d-flex justify-content-between align-items-center"
+              type="button"
+              (click)="toggleDropdown('subject')">
+              <span>{{ selectedSubjects.size ? toArray(selectedSubjects).join(', ') : 'Select Subjects' }}</span>
+            </button>
+            <div class="dropdown-menu w-100" [class.show]="openSubjectDropdown">
+              <div *ngFor="let s of filterSubjects" class="form-check px-2 py-1">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="'subject-' + s"
+                  [checked]="selectedSubjects.has(s)"
+                  (change)="toggleSet(selectedSubjects, s)"
+                />
+                <label class="form-check-label" [for]="'subject-' + s">{{ s }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <small class="text-muted">Showing {{ totalElements }} results</small>
+        </div>
+
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Grade -->
-<div class="mb-3 dropdown-container">
-  <label class="form-label small">Grade</label>
-  <div class="dropdown">
-    <button
-      class="btn btn-outline-secondary w-100 dropdown-toggle text-start d-flex justify-content-between align-items-center"
-      type="button"
-      (click)="toggleDropdown('grade')">
-      <span>{{ selectedGrades.size ? toArray(selectedGrades).join(', ') : 'Select Grades' }}</span>
-    </button>
-    <div class="dropdown-menu w-100" [class.show]="openGradeDropdown">
-      <div *ngFor="let g of filterGrades" class="form-check px-2 py-1">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          [id]="'grade-' + g"
-          [checked]="selectedGrades.has(g)"
-          (change)="toggleSet(selectedGrades, g)"
-        />
-        <label class="form-check-label" [for]="'grade-' + g">{{ g }}</label>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Subject -->
-<div class="mb-3 dropdown-container">
-  <label class="form-label small">Subject</label>
-  <div class="dropdown">
-    <button
-      class="btn btn-outline-secondary w-100 dropdown-toggle text-start d-flex justify-content-between align-items-center"
-      type="button"
-      (click)="toggleDropdown('subject')">
-      <span>{{ selectedSubjects.size ? toArray(selectedSubjects).join(', ') : 'Select Subjects' }}</span>
-    </button>
-    <div class="dropdown-menu w-100" [class.show]="openSubjectDropdown">
-      <div *ngFor="let s of filterSubjects" class="form-check px-2 py-1">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          [id]="'subject-' + s"
-          [checked]="selectedSubjects.has(s)"
-          (change)="toggleSet(selectedSubjects, s)"
-        />
-        <label class="form-check-label" [for]="'subject-' + s">{{ s }}</label>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-    <div class="mt-2">
-      <small class="text-muted">Showing {{ totalElements }} results</small>
-    </div>
-
-  </div>
-</aside>
-
-
-
-
+    </aside>
 
     <!-- RIGHT: Cards + pagination -->
     <main class="col-12 col-md-9 order-0 order-md-1">
 
-  <div *ngIf="loading" class="alert alert-info text-center fw-semibold shadow-sm py-4 px-3 rounded">
-    Loading courses...
-  </div>
+      <div *ngIf="loading" class="alert alert-info text-center fw-semibold shadow-sm py-4 px-3 rounded">
+        Loading courses...
+      </div>
 
-  <div *ngIf="error" class="alert alert-danger text-center fw-semibold shadow-sm py-4 px-3 rounded">
-    {{ error }}
-  </div>
+      <div *ngIf="error" class="alert alert-danger text-center fw-semibold shadow-sm py-4 px-3 rounded">
+        {{ error }}
+      </div>
 
-  <div *ngIf="!loading && courses.length === 0" class="alert alert-info text-center fw-semibold shadow-sm py-4 px-3 rounded">
-    No courses found.
-  </div>
-
-
+      <div *ngIf="!loading && courses.length === 0" class="alert alert-info text-center fw-semibold shadow-sm py-4 px-3 rounded">
+        No courses found.
+      </div>
 
       <div class="row g-3" *ngIf="courses.length > 0">
         <div class="col-12 col-md-6 col-lg-4" *ngFor="let course of courses">
@@ -174,15 +180,21 @@
                 <div><i class="bi bi-mortarboard-fill me-1"></i><strong>Grade:</strong> {{ (course.grade || []).join(', ') || '—' }}</div>
               </div>
 
-              <div class="units mb-3" *ngIf="course.units && course.units.length > 0; else noUnits">
-                <strong><i class="bi bi-list-check me-1"></i>Units:</strong>
-                <ul class="mb-0">
-                  <li *ngFor="let u of course.units"><strong>{{ u.title }}</strong>: {{ u.content }}</li>
-                </ul>
-              </div>
-              <ng-template #noUnits>
-                <div class="small text-muted">No units</div>
-              </ng-template>
+             <div class="units mb-3" *ngIf="course.units && course.units.length > 0; else noUnits">
+  <strong><i class="bi bi-list-check me-1"></i>Units:</strong>
+  <ul class="mb-0">
+    <!-- Show only the first unit -->
+    <li><strong>{{ course.units[0].title }}</strong>: {{ course.units[0].content }}</li>
+    <!-- If more units exist, show +X more -->
+    <li *ngIf="course.units.length > 1" class="text-muted">
+      +{{ course.units.length - 1 }} more
+    </li>
+  </ul>
+</div>
+<ng-template #noUnits>
+  <div class="small text-muted">No units</div>
+</ng-template>
+
 
               <div class="mt-auto d-flex gap-2">
                 <button

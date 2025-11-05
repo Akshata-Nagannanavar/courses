@@ -23,8 +23,6 @@ public class Course {
     @NotBlank(message = "Description cannot be null or blank")
     private String description;
 
-//    @NotBlank(message = "Board cannot be null or blank")
-//    private String board;
 
     @NotNull(message = "Board is required")
     @Enumerated(EnumType.STRING)
@@ -50,21 +48,6 @@ public class Course {
     private List<Grade> grade = new ArrayList<>();
 
 
-
-//    @Column
-//    @Convert(converter = StringListConverter.class)
-//    @NotEmpty(message = "Subject list cannot be null or empty")
-//    private List<String> subject = new ArrayList<>();
-//
-//    @Column
-//    @Convert(converter = StringListConverter.class)
-//    @NotEmpty(message = "Medium list cannot be null or empty")
-//    private List<String> medium = new ArrayList<>();
-//
-//    @Column
-//    @Convert(converter = StringListConverter.class)
-//    @NotEmpty(message = "Grade list cannot be null or empty")
-//    private List<String> grade = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
     @JsonManagedReference

@@ -53,11 +53,14 @@
           "defaultConfiguration": "development"
         },
         "serve": {
-          "builder": "@angular/build:dev-server",
-          "options": {
-            "buildTarget": "course-frontend:build"
-          }
-        },
+  "builder": "@angular/build:dev-server",
+  "options": {
+    "buildTarget": "course-frontend:build",
+    "host": "0.0.0.0",
+    "allowedHosts": ["*"]
+  }
+}
+,
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
         },
