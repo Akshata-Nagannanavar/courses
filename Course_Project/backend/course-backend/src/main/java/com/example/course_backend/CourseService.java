@@ -24,27 +24,55 @@ public class CourseService {
         this.unitRepository = unitRepository;
     }
 
-    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
-    public Course createCourse(Course course) {
-        if (course.getName() == null || course.getName().isBlank())
-            throw new BadRequestException("Name is required");
-        if (course.getDescription() == null || course.getDescription().isBlank())
-            throw new BadRequestException("Description is required");
-        if (course.getSubject() == null || course.getSubject().isEmpty())
-            throw new BadRequestException("At least one subject is required");
-        if (course.getBoard() == null || course.getBoard().isBlank())
-            throw new BadRequestException("Board is required");
-        if (course.getMedium() == null || course.getMedium().isEmpty())
-            throw new BadRequestException("At least one medium is required");
-        if (course.getGrade() == null || course.getGrade().isEmpty())
-            throw new BadRequestException("At least one grade is required");
+@CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
+public Course createCourse(Course course) {
 
-        if (course.getUnits() == null) course.setUnits(new ArrayList<>());
+    // ✅ Convert incoming Strings → Enums
+//    if (course.getBoard() instanceof String strBoard) {
+//        course.setBoard(Board.valueOf(strBoard.toUpperCase()));
+//    }
 
-        Course saved = courseRepository.save(course);
-        logger.info("Created course: {} (id={})", course.getName(), saved.getId());
-        return saved;
+    if (course.getMedium() != null) {
+        course.setMedium(course.getMedium().stream()
+                .map(Object::toString)
+                .map(m -> Medium.valueOf(m.toUpperCase()))
+                .collect(Collectors.toList()));
     }
+
+    if (course.getGrade() != null) {
+        course.setGrade(course.getGrade().stream()
+                .map(Object::toString)
+                .map(g -> Grade.valueOf(g.toUpperCase()))
+                .collect(Collectors.toList()));
+    }
+
+    if (course.getSubject() != null) {
+        course.setSubject(course.getSubject().stream()
+                .map(Object::toString)
+                .map(s -> Subject.valueOf(s.toUpperCase()))
+                .collect(Collectors.toList()));
+    }
+
+    if (course.getName() == null || course.getName().isBlank())
+        throw new BadRequestException("Name is required");
+    if (course.getDescription() == null || course.getDescription().isBlank())
+        throw new BadRequestException("Description is required");
+    if (course.getBoard() == null )
+        throw new BadRequestException("Board is required");
+    if (course.getMedium() == null || course.getMedium().isEmpty())
+        throw new BadRequestException("Medium required");
+    if (course.getGrade() == null || course.getGrade().isEmpty())
+        throw new BadRequestException("Grade required");
+    if (course.getSubject() == null || course.getSubject().isEmpty())
+        throw new BadRequestException("Subject required");
+
+    if (course.getUnits() == null) course.setUnits(new ArrayList<>());
+
+    Course saved = courseRepository.save(course);
+    logger.info("Created course: {} (id={})", saved.getName(), saved.getId());
+    return saved;
+}
+
 
     @Cacheable(value = "courses", key = "#courseId")
     public Course getCourseById(UUID courseId) {
@@ -60,14 +88,38 @@ public class CourseService {
             existing.setName(updatedCourse.getName());
         if (updatedCourse.getDescription() != null && !updatedCourse.getDescription().isBlank())
             existing.setDescription(updatedCourse.getDescription());
-        if (updatedCourse.getSubject() != null && !updatedCourse.getSubject().isEmpty())
-            existing.setSubject(updatedCourse.getSubject());
-        if (updatedCourse.getBoard() != null && !updatedCourse.getBoard().isBlank())
-            existing.setBoard(updatedCourse.getBoard());
-        if (updatedCourse.getMedium() != null && !updatedCourse.getMedium().isEmpty())
-            existing.setMedium(updatedCourse.getMedium());
-        if (updatedCourse.getGrade() != null && !updatedCourse.getGrade().isEmpty())
-            existing.setGrade(updatedCourse.getGrade());
+        if (updatedCourse.getBoard() != null) {
+            existing.setBoard(
+                    updatedCourse.getBoard() instanceof Board
+                            ? (Board) updatedCourse.getBoard()
+                            : Board.valueOf(updatedCourse.getBoard().toString().toUpperCase())
+            );
+        }
+
+        if (updatedCourse.getMedium() != null && !updatedCourse.getMedium().isEmpty()) {
+            existing.setMedium(
+                    updatedCourse.getMedium().stream()
+                            .map(v -> v instanceof Medium ? (Medium) v : Medium.valueOf(v.toString().toUpperCase()))
+                            .collect(Collectors.toList())
+            );
+        }
+
+        if (updatedCourse.getGrade() != null && !updatedCourse.getGrade().isEmpty()) {
+            existing.setGrade(
+                    updatedCourse.getGrade().stream()
+                            .map(v -> v instanceof Grade ? (Grade) v : Grade.valueOf(v.toString().toUpperCase()))
+                            .collect(Collectors.toList())
+            );
+        }
+
+        if (updatedCourse.getSubject() != null && !updatedCourse.getSubject().isEmpty()) {
+            existing.setSubject(
+                    updatedCourse.getSubject().stream()
+                            .map(v -> v instanceof Subject ? (Subject) v : Subject.valueOf(v.toString().toUpperCase()))
+                            .collect(Collectors.toList())
+            );
+        }
+
 
         if (updatedCourse.getUnits() != null) {
             existing.getUnits().clear();
@@ -89,22 +141,39 @@ public class CourseService {
                 case "name" -> course.setName((String) value);
                 case "description" -> course.setDescription((String) value);
                 case "subject" -> {
-                    if (value instanceof List<?> list)
-                        course.setSubject(list.stream().map(Object::toString).toList());
+                    if (value instanceof List<?> list) {
+                        course.setSubject(list.stream()
+                                .map(Object::toString)
+                                .map(s -> Subject.valueOf(s.toUpperCase()))
+                                .toList());
+                    }
                 }
-                case "board" -> course.setBoard((String) value);
+                case "board" -> {
+                    if (value instanceof String str) {
+                        course.setBoard(Board.valueOf(str.toUpperCase()));
+                    }
+                }
                 case "medium" -> {
-                    if (value instanceof List<?> list)
-                        course.setMedium(list.stream().map(Object::toString).toList());
+                    if (value instanceof List<?> list) {
+                        course.setMedium(list.stream()
+                                .map(Object::toString)
+                                .map(m -> Medium.valueOf(m.toUpperCase()))
+                                .toList());
+                    }
                 }
                 case "grade" -> {
-                    if (value instanceof List<?> list)
-                        course.setGrade(list.stream().map(Object::toString).toList());
+                    if (value instanceof List<?> list) {
+                        course.setGrade(list.stream()
+                                .map(Object::toString)
+                                .map(g -> Grade.valueOf(g.toUpperCase()))
+                                .toList());
+                    }
                 }
             }
         });
 
-        Course saved = courseRepository.save(course);
+
+    Course saved = courseRepository.save(course);
         logger.info("Patched course: {} (id={})", saved.getName(), saved.getId());
         return saved;
     }
@@ -132,7 +201,7 @@ public class CourseService {
         List<Course> allCourses = courseRepository.findAll();
 
         List<Course> filtered = allCourses.stream()
-                .filter(c -> board == null || board.isBlank() || (c.getBoard() != null && c.getBoard().equalsIgnoreCase(board)))
+                .filter(c -> board == null || board.isBlank() )
                 .filter(c -> medium == null || medium.isBlank() || (c.getMedium() != null && c.getMedium().contains(medium)))
                 .filter(c -> subject == null || subject.isBlank() || (c.getSubject() != null && c.getSubject().contains(subject)))
                 .filter(c -> grade == null || grade.isBlank() || (c.getGrade() != null && c.getGrade().contains(grade)))

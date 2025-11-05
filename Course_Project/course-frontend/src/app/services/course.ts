@@ -22,6 +22,13 @@ export interface Course {
   units?: Unit[];
 }
 
+export interface EnumsResponse {
+  boards: string[];
+  subjects: string[];
+  mediums: string[];
+  grades: string[];
+}
+
 export interface CoursePage {
   data: Course[];
   totalPages: number;
@@ -38,7 +45,7 @@ export interface CoursePage {
 })
 export class Course {
   private baseUrl = '/api/courses';
-  private baseMetaUrl = '/api/meta';
+
 
   constructor(private http: HttpClient) {}
 
@@ -146,20 +153,9 @@ export class Course {
     );
   }
 
-  /** - Dropdown Meta Data - */
-  getBoards(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseMetaUrl}/boards`);
+
+  getEnums(): Observable<EnumsResponse> {
+    return this.http.get<EnumsResponse>(`${this.baseUrl}/enums`);
   }
 
-  getMediums(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseMetaUrl}/mediums`);
-  }
-
-  getGrades(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseMetaUrl}/grades`);
-  }
-
-  getSubjects(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseMetaUrl}/subjects`);
-  }
 }

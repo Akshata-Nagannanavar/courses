@@ -1,4 +1,4 @@
-import { Component, OnInit ,HostListener } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -18,16 +18,16 @@ export class CourseDetailsComponent implements OnInit {
   editMode = false;
   courseForm!: FormGroup;
 
-openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
+  openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
 
-  //  For Unit management
+  // Unit section
   units: Unit[] = [];
   editingUnitIndex: number | null = null;
   unitEditForm!: FormGroup;
   newUnitForm!: FormGroup;
   addingUnit = false;
 
-  //  Dynamic filter data
+  // Enum filter data
   boards: string[] = [];
   mediums: string[] = [];
   grades: string[] = [];
@@ -51,12 +51,15 @@ openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
       this.loadUnits();
     }
 
-    this.courseService.getAllForFilters().subscribe({
-      next: (all) => this.buildFiltersFromAll(all),
-      error: (err) => {
-        console.warn('Failed to fetch filter options:', err);
-        this.buildFiltersFromAll([]);
-      }
+    // ✅ Load backend ENUMS ✅
+    this.courseService.getEnums().subscribe({
+      next: (data) => {
+        this.boards = data.boards;
+        this.mediums = data.mediums;
+        this.grades = data.grades;
+        this.subjects = data.subjects;
+      },
+      error: () => console.warn('Failed to fetch enums')
     });
 
     // Initialize new unit form
@@ -64,20 +67,6 @@ openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
       title: ['', Validators.required],
       content: ['', Validators.required]
     });
-  }
-
-  private buildFiltersFromAll(allCourses: CourseModel[]) {
-    const b = new Set<string>(), m = new Set<string>(), g = new Set<string>(), s = new Set<string>();
-    for (const c of allCourses || []) {
-      if (c.board) b.add(c.board);
-      (c.medium || []).forEach(x => x && m.add(x));
-      (c.grade || []).forEach(x => x && g.add(x));
-      (c.subject || []).forEach(x => x && s.add(x));
-    }
-    this.boards = Array.from(b).sort();
-    this.mediums = Array.from(m).sort();
-    this.grades = Array.from(g).sort();
-    this.subjects = Array.from(s).sort();
   }
 
   loadCourse(): void {
@@ -99,10 +88,7 @@ openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
   loadUnits(): void {
     this.courseService.getUnitsForCourse(this.courseId!).subscribe({
       next: (units) => (this.units = units || []),
-      error: (err) => {
-        console.error('Failed to load units:', err);
-        this.units = [];
-      }
+      error: () => (this.units = [])
     });
   }
 
@@ -156,10 +142,7 @@ openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
         this.editMode = false;
         this.loadCourse();
       },
-      error: (err) => {
-        console.error('Update failed:', err);
-        alert('❌ Failed to update course!');
-      }
+      error: () => alert('❌ Failed to update course!')
     });
   }
 
@@ -172,8 +155,7 @@ openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
     this.router.navigate(['/courses']);
   }
 
-
-  //  UNIT MANAGEMENT SECTION
+  // Unit section
 
   startEditUnit(index: number): void {
     const unit = this.units[index];
@@ -197,24 +179,21 @@ openDropdown: 'mediums' | 'grades' | 'subjects' | null = null;
         this.editingUnitIndex = null;
         this.loadUnits();
       },
-      error: (err) => {
-        console.error('Unit update failed:', err);
-        alert('❌ Failed to update unit!');
-      }
+      error: () => alert('❌ Failed to update unit!')
     });
   }
-  toggleDropdown(type: 'mediums' | 'grades' | 'subjects') {
-  this.openDropdown = this.openDropdown === type ? null : type;
-}
 
-// Close dropdown when clicking outside
-@HostListener('document:click', ['$event'])
-onClickOutside(event: MouseEvent) {
-  const target = event.target as HTMLElement;
-  if (!target.closest('.dropdown-container')) {
-    this.openDropdown = null;
+  toggleDropdown(type: 'mediums' | 'grades' | 'subjects') {
+    this.openDropdown = this.openDropdown === type ? null : type;
   }
-}
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown-container')) {
+      this.openDropdown = null;
+    }
+  }
 
   cancelUnitEdit(): void {
     this.editingUnitIndex = null;
@@ -231,10 +210,7 @@ onClickOutside(event: MouseEvent) {
         alert('🗑️ Unit deleted!');
         this.loadUnits();
       },
-      error: (err) => {
-        console.error('Unit deletion failed:', err);
-        alert('❌ Failed to delete unit!');
-      }
+      error: () => alert('❌ Failed to delete unit!')
     });
   }
 
@@ -254,12 +230,7 @@ onClickOutside(event: MouseEvent) {
         this.addingUnit = false;
         this.loadUnits();
       },
-      error: (err) => {
-        console.error('Add unit failed:', err);
-        alert('❌ Failed to add unit!');
-      }
+      error: () => alert('❌ Failed to add unit!')
     });
   }
 }
-
-

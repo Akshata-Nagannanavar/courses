@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Course } from '../../services/course';
+import { Course, EnumsResponse } from '../../services/course';
 import type { Course as CourseModel } from '../../services/course';
 
 @Component({
@@ -15,6 +15,7 @@ import type { Course as CourseModel } from '../../services/course';
 export class CreateCourseComponent implements OnInit {
   courseForm: FormGroup;
 
+  // Filter / Enum lists
   filterBoards: string[] = [];
   filterMediums: string[] = [];
   filterGrades: string[] = [];
@@ -39,12 +40,27 @@ export class CreateCourseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.courseService.getAllForFilters().subscribe({
-      next: (courses) => this.buildFiltersFromAll(courses),
-      error: (err) => console.error('Failed to fetch filter data:', err)
+    // ✅ Use backend enums instead of scanning all courses
+    this.courseService.getEnums().subscribe({
+      next: (data: EnumsResponse) => {
+        this.filterBoards = data.boards || [];
+        this.filterMediums = data.mediums || [];
+        this.filterGrades = data.grades || [];
+        this.filterSubjects = data.subjects || [];
+      },
+      error: (err) => {
+        console.error('Failed to fetch enums, falling back to old method:', err);
+
+        // Optional fallback (if backend enums API fails)
+        this.courseService.getAllForFilters().subscribe({
+          next: (courses) => this.buildFiltersFromAll(courses),
+          error: (e) => console.error('Fallback also failed:', e)
+        });
+      }
     });
   }
 
+  /** Fallback - keep existing buildFiltersFromAll */
   private buildFiltersFromAll(allCourses: CourseModel[]) {
     const b = new Set<string>(), m = new Set<string>(), g = new Set<string>(), s = new Set<string>();
 
@@ -71,7 +87,6 @@ export class CreateCourseComponent implements OnInit {
     return this.courseForm.touched && this.selectedSubjects.length === 0;
   }
 
-  /**  Combined validation for button disable */
   isFormValid(): boolean {
     return (
       this.courseForm.valid &&
@@ -85,9 +100,11 @@ export class CreateCourseComponent implements OnInit {
     const value = event.target.value;
     const checked = event.target.checked;
     const selectedArray =
-      field === 'medium' ? this.selectedMediums :
-      field === 'grade' ? this.selectedGrades :
-      this.selectedSubjects;
+      field === 'medium'
+        ? this.selectedMediums
+        : field === 'grade'
+        ? this.selectedGrades
+        : this.selectedSubjects;
 
     if (checked && !selectedArray.includes(value)) selectedArray.push(value);
     else if (!checked) selectedArray.splice(selectedArray.indexOf(value), 1);

@@ -116,6 +116,15 @@ main .card {
   flex-direction: column;
   justify-content: space-between;
 }
+.dropdown-menu.w-100 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.dropdown-menu .form-check {
+  margin-left: 0.5rem;
+}
+
 
 main .card:hover {
   transform: translateY(-6px);

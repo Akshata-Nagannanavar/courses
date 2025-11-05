@@ -28,6 +28,16 @@ public class CourseController {
         return ResponseEntity.status(201).body(ResponseUtil.successWithData("api.course.create", result));
     }
 
+    @GetMapping("/enums")
+    public Map<String, List<String>> getEnums() {
+        return Map.of(
+                "boards", Arrays.stream(Board.values()).map(Enum::name).toList(),
+                "subjects", Arrays.stream(Subject.values()).map(Enum::name).toList(),
+                "mediums", Arrays.stream(Medium.values()).map(Enum::name).toList(),
+                "grades", Arrays.stream(Grade.values()).map(Enum::name).toList()
+        );
+    }
+
     @GetMapping
     public ResponseEntity<ApiResponse<Map<String, Object>>> getAllCourses(
             @RequestParam(required = false) String board,

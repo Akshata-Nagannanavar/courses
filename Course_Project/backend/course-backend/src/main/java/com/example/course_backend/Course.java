@@ -1,55 +1,6 @@
-//package com.example.course_backend;
-//
-//import jakarta.persistence.*;
-//import jakarta.validation.constraints.*;
-//import lombok.*;
-//import java.util.*;
-//import com.fasterxml.jackson.annotation.JsonManagedReference;
-//
-//
-//@Entity
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Table(name = "course")
-//public class Course {
-//
-//    @Id
-//    @GeneratedValue(generator = "UUID")
-//    private UUID id;
-//
-//    @NotBlank(message = "Name cannot be null or blank")
-//    private String name;
-//
-//    @NotBlank(message = "Description cannot be null or blank")
-//    private String description;
-//
-//    @NotBlank(message = "Board cannot be null or blank")
-//    private String board;
-//
-//    @Column(columnDefinition = "jsonb")
-//    @Convert(converter = StringListConverter.class)
-//    @NotEmpty(message = "Subject list cannot be null or empty")
-//    private List<String> subject = new ArrayList<>();
-//
-//    @Column(columnDefinition = "jsonb")
-//    @Convert(converter = StringListConverter.class)
-//    @NotEmpty(message = "Medium list cannot be null or empty")
-//    private List<String> medium = new ArrayList<>();
-//
-//    @Column(columnDefinition = "jsonb")
-//    @Convert(converter = StringListConverter.class)
-//    @NotEmpty(message = "Grade list cannot be null or empty")
-//    private List<String> grade = new ArrayList<>();
-//
-//    // ✅ Use LAZY fetch to avoid unnecessary loading
-//    // ✅ Include CascadeType.ALL to manage units with course
-//    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
-//    @JsonManagedReference
-//    private List<Unit> units = new ArrayList<>();
-//}
-package com.example.course_backend;
 
+package com.example.course_backend;
+import com.example.course_backend.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -72,23 +23,48 @@ public class Course {
     @NotBlank(message = "Description cannot be null or blank")
     private String description;
 
-    @NotBlank(message = "Board cannot be null or blank")
-    private String board;
+//    @NotBlank(message = "Board cannot be null or blank")
+//    private String board;
 
-    @Column
-    @Convert(converter = StringListConverter.class)
+    @NotNull(message = "Board is required")
+    @Enumerated(EnumType.STRING)
+    private Board board;
+
+
+    @ElementCollection(targetClass = Subject.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "subject")
     @NotEmpty(message = "Subject list cannot be null or empty")
-    private List<String> subject = new ArrayList<>();
+    private List<Subject> subject = new ArrayList<>();
 
-    @Column
-    @Convert(converter = StringListConverter.class)
+    @ElementCollection(targetClass = Medium.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "medium")
     @NotEmpty(message = "Medium list cannot be null or empty")
-    private List<String> medium = new ArrayList<>();
+    private List<Medium> medium = new ArrayList<>();
 
-    @Column
-    @Convert(converter = StringListConverter.class)
+    @ElementCollection(targetClass = Grade.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "grade")
     @NotEmpty(message = "Grade list cannot be null or empty")
-    private List<String> grade = new ArrayList<>();
+    private List<Grade> grade = new ArrayList<>();
+
+
+
+//    @Column
+//    @Convert(converter = StringListConverter.class)
+//    @NotEmpty(message = "Subject list cannot be null or empty")
+//    private List<String> subject = new ArrayList<>();
+//
+//    @Column
+//    @Convert(converter = StringListConverter.class)
+//    @NotEmpty(message = "Medium list cannot be null or empty")
+//    private List<String> medium = new ArrayList<>();
+//
+//    @Column
+//    @Convert(converter = StringListConverter.class)
+//    @NotEmpty(message = "Grade list cannot be null or empty")
+//    private List<String> grade = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
     @JsonManagedReference

@@ -1,8 +1,8 @@
-# Maven build output
+
 target/
 *.log
 
-# Environment and config files
+
 .env
 
 # Git and IDE
