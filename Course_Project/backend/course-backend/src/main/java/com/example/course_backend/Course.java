@@ -1,18 +1,21 @@
 
 package com.example.course_backend;
+
 import com.example.course_backend.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import java.util.*;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "course")
 public class Course {
-
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID id;

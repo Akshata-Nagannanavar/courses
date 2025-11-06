@@ -8,6 +8,6 @@ import { App } from './app/app';
 bootstrapApplication(App, {
   providers: [
     provideRouter(routes),
-    provideHttpClient()  // ✅ enables HttpClient
+    provideHttpClient()
   ]
 }).catch(err => console.error(err));

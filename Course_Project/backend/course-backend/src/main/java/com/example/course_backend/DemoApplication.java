@@ -3,9 +3,8 @@ package com.example.course_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.*;
-
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.web.bind.annotation.*;
 
 @SpringBootApplication
 @EnableCaching
@@ -16,7 +15,6 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
     }
 
-    // Simple GET endpoint
     @GetMapping("/hello")
     public String hello() {
         return "Spring Boot is running alright!";

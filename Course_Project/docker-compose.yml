@@ -1,7 +1,6 @@
 
 
 services:
-
   postgres:
     container_name: course_postgres
     image: postgres:16
@@ -47,7 +46,6 @@ services:
     restart: always
     networks:
       - course_network
-
 
 networks:
   course_network:

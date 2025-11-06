@@ -2,18 +2,19 @@
 
 package com.example.course_backend;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
 import java.util.UUID;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL) // 🚀 Ignore null fields in JSON
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Unit {
 
     @Id

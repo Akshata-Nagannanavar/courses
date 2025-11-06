@@ -2,11 +2,14 @@
 
 package com.example.course_backend;
 
-import org.springframework.stereotype.Service;
-import org.springframework.data.domain.*;
-import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class UnitService {
@@ -32,7 +35,7 @@ public class UnitService {
         unit.setCourse(course); // link unit to course
         Unit savedUnit = unitRepository.save(unit); // save unit explicitly
 
-        // Optionally, add to course units list (not mandatory if mappedBy is correct)
+
         course.getUnits().add(savedUnit);
 
         logger.info("Added unit '{}' to course '{}'", savedUnit.getTitle(), course.getName());
