@@ -1,5 +1,6 @@
 
 
+# Using Different networks
 services:
   postgres:
     container_name: course_postgres
@@ -14,7 +15,7 @@ services:
       - "5432:5432"
     restart: always
     networks:
-      - course_network
+      - db_network
 
   backend:
     container_name: course_backend
@@ -34,6 +35,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       - course_network
+      - db_network
 
   frontend:
     container_name: course_frontend
@@ -50,6 +52,65 @@ services:
 networks:
   course_network:
     driver: bridge
+  db_network:
+    driver: bridge
 
 volumes:
   postgres_data:
+
+
+
+# Single network
+#services:
+#  postgres:
+#    container_name: course_postgres
+#    image: postgres:16-alpine
+#    environment:
+#      POSTGRES_USER: ${POSTGRES_USER}
+#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#      POSTGRES_DB: ${POSTGRES_DB}
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+#    restart: always
+#    networks:
+#      - course_network
+#
+#  backend:
+#    container_name: course_backend
+#    build:
+#      context: ./backend/course-backend
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    env_file:
+#      - .env
+#    depends_on:
+#      - postgres
+#    restart: always
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+#      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+#      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+#    networks:
+#      - course_network
+#
+#  frontend:
+#    container_name: course_frontend
+#    build:
+#      context: ./course-frontend
+#    ports:
+#      - "4200:80"
+#    depends_on:
+#      - backend
+#    restart: always
+#    networks:
+#      - course_network
+#
+#networks:
+#  course_network:
+#    driver: bridge
+#
+#volumes:
+#  postgres_data:
