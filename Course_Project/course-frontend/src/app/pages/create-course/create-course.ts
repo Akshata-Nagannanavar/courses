@@ -32,15 +32,33 @@ export class CreateCourseComponent implements OnInit {
     private router: Router,
     private courseService: Course
   ) {
+    // this.courseForm = this.fb.group({
+    //   name: ['', Validators.required],
+    //   description: ['', Validators.required],
+    //   board: ['', Validators.required],
+    // });
     this.courseForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      board: ['', Validators.required],
-    });
+  name: [
+    '',
+    [
+      Validators.required,
+      Validators.maxLength(30)
+    ]
+  ],
+  description: [
+    '',
+    [
+      Validators.required,
+      Validators.maxLength(100)
+    ]
+  ],
+  board: ['', Validators.required],
+});
+
   }
 
   ngOnInit(): void {
-    // ✅ Use backend enums instead of scanning all courses
+    //  Use backend enums instead of scanning all courses
     this.courseService.getEnums().subscribe({
       next: (data: EnumsResponse) => {
         this.filterBoards = data.boards || [];
@@ -113,7 +131,7 @@ export class CreateCourseComponent implements OnInit {
   onSubmit() {
     if (!this.isFormValid()) {
       this.courseForm.markAllAsTouched();
-      alert('⚠️ Please fill all required fields including Medium, Grade, and Subject.');
+      alert(' Please fill all required fields including Medium, Grade, and Subject.');
       return;
     }
 
@@ -126,12 +144,12 @@ export class CreateCourseComponent implements OnInit {
 
     this.courseService.createCourse(newCourse).subscribe({
       next: () => {
-        alert('✅ Course created successfully!');
+        alert(' Course created successfully!');
         this.router.navigate(['/courses']);
       },
       error: (err) => {
         console.error('Error creating course:', err);
-        alert('❌ Failed to create course!');
+        alert(' Failed to create course!');
       }
     });
   }

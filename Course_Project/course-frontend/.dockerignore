@@ -1,0 +1,61 @@
+# Node & package files
+node_modules
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist
+out
+build
+.tmp
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Cache
+.cache
+.angular/cache
+.npm
+.turbo
+.vite
+
+# Logs
+*.log
+logs
+debug.log
+
+# Test & coverage
+coverage
+test-results
+reports
+
+# IDE / editor files
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker / compose files (optional)
+Dockerfile*
+docker-compose*.yml
+
+# Miscellaneous
+.husky
+.eslintcache
+tmp
+docs
+examples

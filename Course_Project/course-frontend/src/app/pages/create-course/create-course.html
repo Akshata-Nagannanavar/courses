@@ -12,44 +12,55 @@
 
       <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" novalidate class="row g-3">
         <!-- Course Name -->
-        <div class="col-12">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-pencil-square me-1 text-primary"></i> Name
-            <span class="text-danger">*</span>
-          </label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="name"
-            placeholder="Enter course name"
-          />
-          <div
-            class="form-text text-danger"
-            *ngIf="courseForm.get('name')?.invalid && courseForm.get('name')?.touched"
-          >
-            Name is required
-          </div>
-        </div>
+<div class="col-12">
+  <label class="form-label fw-semibold">
+    <i class="bi bi-pencil-square me-1 text-primary"></i> Name
+    <span class="text-danger">*</span>
+  </label>
+  <input
+    type="text"
+    class="form-control"
+    formControlName="name"
+    placeholder="Enter course name"
+  />
+  <div
+    class="form-text text-danger"
+    *ngIf="courseForm.get('name')?.invalid && courseForm.get('name')?.touched"
+  >
+    <span *ngIf="courseForm.get('name')?.errors?.['required']">
+      Name is required
+    </span>
+    <span *ngIf="courseForm.get('name')?.errors?.['maxlength']">
+      Name cannot exceed 30 characters
+    </span>
+  </div>
+</div>
 
-        <!-- Description -->
-        <div class="col-12">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-card-text me-1 text-primary"></i> Description
-            <span class="text-danger">*</span>
-          </label>
-          <textarea
-            class="form-control"
-            formControlName="description"
-            rows="3"
-            placeholder="Enter course description"
-          ></textarea>
-          <div
-            class="form-text text-danger"
-            *ngIf="courseForm.get('description')?.invalid && courseForm.get('description')?.touched"
-          >
-            Description is required
-          </div>
-        </div>
+<!-- Description -->
+<div class="col-12">
+  <label class="form-label fw-semibold">
+    <i class="bi bi-card-text me-1 text-primary"></i> Description
+    <span class="text-danger">*</span>
+  </label>
+  <textarea
+    class="form-control"
+    formControlName="description"
+    rows="3"
+    placeholder="Enter course description"
+  ></textarea>
+  <div
+    class="form-text text-danger"
+    *ngIf="courseForm.get('description')?.invalid && courseForm.get('description')?.touched"
+  >
+    <span *ngIf="courseForm.get('description')?.errors?.['required']">
+      Description is required
+    </span>
+    <span *ngIf="courseForm.get('description')?.errors?.['maxlength']">
+      Description cannot exceed 100 characters
+    </span>
+  </div>
+</div>
+
 
         <!-- Board -->
         <div class="col-12">

@@ -51,7 +51,7 @@ export class CourseDetailsComponent implements OnInit {
       this.loadUnits();
     }
 
-    //  Load backend ENUMS ✅
+    //  Load backend ENUMS
     this.courseService.getEnums().subscribe({
       next: (data) => {
         this.boards = data.boards;
@@ -93,12 +93,27 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   initializeForm(course: CourseModel): void {
-    this.courseForm = this.fb.group({
-      name: [course.name, Validators.required],
-      description: [course.description, Validators.required],
-      board: [course.board, Validators.required]
-    });
-  }
+  this.courseForm = this.fb.group({
+    name: [
+      course.name,
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(30)
+      ]
+    ],
+    description: [
+      course.description,
+      [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(100)
+      ]
+    ],
+    board: [course.board, Validators.required]
+  });
+}
+
 
   toggleEdit(): void {
     this.editMode = !this.editMode;
@@ -142,7 +157,7 @@ export class CourseDetailsComponent implements OnInit {
         this.editMode = false;
         this.loadCourse();
       },
-      error: () => alert('❌ Failed to update course!')
+      error: () => alert(' Failed to update course!')
     });
   }
 

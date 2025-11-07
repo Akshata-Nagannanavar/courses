@@ -225,6 +225,7 @@ onSubjectsChange() {
 
   // Navigation
   goToCreateCourse(): void {
+     console.log('Add Course clicked');
     this.router.navigate(['/createCourse']);
   }
 
