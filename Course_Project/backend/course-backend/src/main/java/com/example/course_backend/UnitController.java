@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/courses/{courseId}/units")
@@ -21,7 +21,7 @@ public class UnitController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Map<String, Object>>> addUnitToCourse(
-            @PathVariable UUID courseId,
+            @PathVariable Integer courseId,
             @RequestBody Unit unit) {
         Unit created = unitService.addUnitToCourse(courseId, unit);
         return ResponseEntity.status(201).body(ResponseUtil.successWithData("api.unit.create",
@@ -30,7 +30,7 @@ public class UnitController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<Map<String, Object>>> getUnitsByCourse(
-            @PathVariable UUID courseId,
+            @PathVariable Integer courseId,
             @PageableDefault(size = 10) Pageable pageable) {
         var page = unitService.getUnitsByCoursePaginated(courseId, pageable);
         Map<String, Object> result = new HashMap<>();
@@ -44,8 +44,8 @@ public class UnitController {
 
     @PutMapping("/{unitId}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> updateUnit(
-            @PathVariable UUID courseId,
-            @PathVariable UUID unitId,
+            @PathVariable Integer courseId,
+            @PathVariable Integer unitId,
             @RequestBody Unit updatedUnit) {
         Unit saved = unitService.updateUnit(courseId, unitId, updatedUnit);
         return ResponseEntity.ok(ResponseUtil.successWithData("api.unit.update",
@@ -54,8 +54,8 @@ public class UnitController {
 
     @PatchMapping("/{unitId}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> patchUnit(
-            @PathVariable UUID courseId,
-            @PathVariable UUID unitId,
+            @PathVariable Integer courseId,
+            @PathVariable Integer unitId,
             @RequestBody Map<String, Object> updates) {
         Unit patched = unitService.patchUnit(courseId, unitId, updates);
         return ResponseEntity.ok(ResponseUtil.successWithData("api.unit.patch",
@@ -64,8 +64,8 @@ public class UnitController {
 
     @DeleteMapping("/{unitId}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> deleteUnit(
-            @PathVariable UUID courseId,
-            @PathVariable UUID unitId) {
+            @PathVariable Integer courseId,
+            @PathVariable Integer unitId) {
         unitService.deleteUnit(courseId, unitId);
         return ResponseEntity.ok(ResponseUtil.successWithData("api.unit.delete",
                 Map.of("message", "Unit deleted successfully")));

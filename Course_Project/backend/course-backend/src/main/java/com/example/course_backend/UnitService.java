@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 
 @Service
 public class UnitService {
@@ -23,7 +23,7 @@ public class UnitService {
         this.courseRepository = courseRepository;
     }
 
-    public Unit addUnitToCourse(UUID courseId, Unit unit) {
+    public Unit addUnitToCourse(Integer courseId, Unit unit) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found"));
 
@@ -42,7 +42,7 @@ public class UnitService {
         return savedUnit;
     }
 
-    public Page<Unit> getUnitsByCoursePaginated(UUID courseId, Pageable pageable) {
+    public Page<Unit> getUnitsByCoursePaginated(Integer courseId, Pageable pageable) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found"));
         List<Unit> units = course.getUnits();
@@ -52,7 +52,7 @@ public class UnitService {
         return new PageImpl<>(content, pageable, units.size());
     }
 
-    public Unit updateUnit(UUID courseId, UUID unitId, Unit updatedUnit) {
+    public Unit updateUnit(Integer courseId, Integer unitId, Unit updatedUnit) {
         Unit unit = unitRepository.findById(unitId).orElseThrow(() -> new NotFoundException("Unit not found"));
         if (unit.getCourse() == null || !unit.getCourse().getId().equals(courseId))
             throw new BadRequestException("Unit does not belong to course " + courseId);
@@ -64,7 +64,7 @@ public class UnitService {
         return saved;
     }
 
-    public Unit patchUnit(UUID courseId, UUID unitId, Map<String, Object> updates) {
+    public Unit patchUnit(Integer courseId, Integer unitId, Map<String, Object> updates) {
         Unit unit = unitRepository.findById(unitId).orElseThrow(() -> new NotFoundException("Unit not found"));
         if (unit.getCourse() == null || !unit.getCourse().getId().equals(courseId))
             throw new BadRequestException("Unit does not belong to course " + courseId);
@@ -81,7 +81,7 @@ public class UnitService {
         return saved;
     }
 
-    public void deleteUnit(UUID courseId, UUID unitId) {
+    public void deleteUnit(Integer courseId, Integer unitId) {
         Unit unit = unitRepository.findById(unitId).orElseThrow(() -> new NotFoundException("Unit not found"));
         if (unit.getCourse() == null || !unit.getCourse().getId().equals(courseId))
             throw new BadRequestException("Unit does not belong to course " + courseId);

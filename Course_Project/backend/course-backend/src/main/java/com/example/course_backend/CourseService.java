@@ -23,59 +23,59 @@ public class CourseService {
         this.unitRepository = unitRepository;
     }
 
-@CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
-public Course createCourse(Course course) {
+   // @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
+    public Course createCourse(Course course) {
 
-    if (course.getMedium() != null) {
-        course.setMedium(course.getMedium().stream()
-                .map(Object::toString)
-                .map(m -> Medium.valueOf(m.toUpperCase()))
-                .collect(Collectors.toList()));
+        if (course.getMedium() != null) {
+            course.setMedium(course.getMedium().stream()
+                    .map(Object::toString)
+                    .map(m -> Medium.valueOf(m.toUpperCase()))
+                    .collect(Collectors.toList()));
+        }
+
+        if (course.getGrade() != null) {
+            course.setGrade(course.getGrade().stream()
+                    .map(Object::toString)
+                    .map(g -> Grade.valueOf(g.toUpperCase()))
+                    .collect(Collectors.toList()));
+        }
+
+        if (course.getSubject() != null) {
+            course.setSubject(course.getSubject().stream()
+                    .map(Object::toString)
+                    .map(s -> Subject.valueOf(s.toUpperCase()))
+                    .collect(Collectors.toList()));
+        }
+
+        if (course.getName() == null || course.getName().isBlank())
+            throw new BadRequestException("Name is required");
+        if (course.getDescription() == null || course.getDescription().isBlank())
+            throw new BadRequestException("Description is required");
+        if (course.getBoard() == null )
+            throw new BadRequestException("Board is required");
+        if (course.getMedium() == null || course.getMedium().isEmpty())
+            throw new BadRequestException("Medium required");
+        if (course.getGrade() == null || course.getGrade().isEmpty())
+            throw new BadRequestException("Grade required");
+        if (course.getSubject() == null || course.getSubject().isEmpty())
+            throw new BadRequestException("Subject required");
+
+        if (course.getUnits() == null) course.setUnits(new ArrayList<>());
+
+        Course saved = courseRepository.save(course);
+        logger.info("Created course: {} (id={})", saved.getName(), saved.getId());
+        return saved;
     }
 
-    if (course.getGrade() != null) {
-        course.setGrade(course.getGrade().stream()
-                .map(Object::toString)
-                .map(g -> Grade.valueOf(g.toUpperCase()))
-                .collect(Collectors.toList()));
-    }
 
-    if (course.getSubject() != null) {
-        course.setSubject(course.getSubject().stream()
-                .map(Object::toString)
-                .map(s -> Subject.valueOf(s.toUpperCase()))
-                .collect(Collectors.toList()));
-    }
-
-    if (course.getName() == null || course.getName().isBlank())
-        throw new BadRequestException("Name is required");
-    if (course.getDescription() == null || course.getDescription().isBlank())
-        throw new BadRequestException("Description is required");
-    if (course.getBoard() == null )
-        throw new BadRequestException("Board is required");
-    if (course.getMedium() == null || course.getMedium().isEmpty())
-        throw new BadRequestException("Medium required");
-    if (course.getGrade() == null || course.getGrade().isEmpty())
-        throw new BadRequestException("Grade required");
-    if (course.getSubject() == null || course.getSubject().isEmpty())
-        throw new BadRequestException("Subject required");
-
-    if (course.getUnits() == null) course.setUnits(new ArrayList<>());
-
-    Course saved = courseRepository.save(course);
-    logger.info("Created course: {} (id={})", saved.getName(), saved.getId());
-    return saved;
-}
-
-
-    @Cacheable(value = "courses", key = "#courseId")
-    public Course getCourseById(UUID courseId) {
+   // @Cacheable(value = "courses", key = "#courseId")
+    public Course getCourseById(Integer courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found with id: " + courseId));
     }
 
-    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
-    public Course updateCourse(UUID courseId, Course updatedCourse) {
+    //@CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
+    public Course updateCourse(Integer courseId, Course updatedCourse) {
         Course existing = getCourseById(courseId);
 
         if (updatedCourse.getName() != null && !updatedCourse.getName().isBlank())
@@ -126,8 +126,8 @@ public Course createCourse(Course course) {
         return saved;
     }
 
-    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
-    public Course patchCourse(UUID courseId, Map<String, Object> updates) {
+   // @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
+    public Course patchCourse(Integer courseId, Map<String, Object> updates) {
         Course course = getCourseById(courseId);
 
         updates.forEach((key, value) -> {
@@ -167,13 +167,13 @@ public Course createCourse(Course course) {
         });
 
 
-    Course saved = courseRepository.save(course);
+        Course saved = courseRepository.save(course);
         logger.info("Patched course: {} (id={})", saved.getName(), saved.getId());
         return saved;
     }
 
-    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
-    public void deleteCourse(UUID courseId) {
+  //  @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
+    public void deleteCourse(Integer courseId) {
         Course course = getCourseById(courseId);
 
         if (course.getUnits() != null) {
@@ -187,7 +187,7 @@ public Course createCourse(Course course) {
         logger.info("Deleted course: {} (id={})", course.getName(), course.getId());
     }
 
-    @Cacheable(value = "coursesList", key = "#root.methodName + '_' + #board + '_' + #subject + '_' + #grade + '_' + #search + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
+    //@Cacheable(value = "coursesList", key = "#root.methodName + '_' + #board + '_' + #subject + '_' + #grade + '_' + #search + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public Page<Course> filterSearchSortPageable(String board, String medium,String subject, String grade,
                                                  String search, String orderBy, String direction,
                                                  Pageable pageable) {

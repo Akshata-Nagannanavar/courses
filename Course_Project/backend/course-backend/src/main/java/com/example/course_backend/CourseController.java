@@ -69,14 +69,14 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getCourseById(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getCourseById(@PathVariable Integer id) {
         Course course = courseService.getCourseById(id);
         Map<String, Object> result = Map.of("message", "Course fetched successfully", "data", course);
         return ResponseEntity.ok(ResponseUtil.successWithData("api.course.getById", result));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> updateCourse(@PathVariable UUID id,
+    public ResponseEntity<ApiResponse<Map<String, Object>>> updateCourse(@PathVariable Integer id,
                                                                          @RequestBody Course updatedCourse) {
         Course course = courseService.updateCourse(id, updatedCourse);
         Map<String, Object> result = Map.of("message", "Course updated successfully", "data", course);
@@ -84,7 +84,7 @@ public class CourseController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> patchCourse(@PathVariable UUID id,
+    public ResponseEntity<ApiResponse<Map<String, Object>>> patchCourse(@PathVariable Integer id,
                                                                         @RequestBody Map<String, Object> updates) {
         Course course = courseService.patchCourse(id, updates);
         Map<String, Object> result = Map.of("message", "Course partially updated successfully", "data", course);
@@ -92,7 +92,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> deleteCourse(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> deleteCourse(@PathVariable Integer id) {
         courseService.deleteCourse(id);
         Map<String, Object> result = Map.of("message", "Course deleted successfully");
         return ResponseEntity.ok(ResponseUtil.successWithData("api.course.delete", result));
