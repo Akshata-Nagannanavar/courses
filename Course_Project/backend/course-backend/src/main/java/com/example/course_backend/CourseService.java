@@ -187,18 +187,42 @@ public class CourseService {
         logger.info("Deleted course: {} (id={})", course.getName(), course.getId());
     }
 
-    @Cacheable(value = "coursesList", key = "#root.methodName + '_' + #board + '_' + #subject + '_' + #grade + '_' + #search + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public Page<Course> filterSearchSortPageable(String board, String medium,String subject, String grade,
                                                  String search, String orderBy, String direction,
                                                  Pageable pageable) {
 
+        // Cache the filtered list instead of Page object to avoid serialization issues with PageImpl
+        List<Course> filtered = getFilteredCoursesList(board, medium, subject, grade, search, direction);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), filtered.size());
+        List<Course> pageContent = start >= filtered.size() ? List.of() : filtered.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, filtered.size());
+    }
+
+    @Cacheable(value = "coursesList", key = "#root.methodName + '_' + #board + '_' + #medium + '_' + #subject + '_' + #grade + '_' + #search + '_' + #direction")
+    public List<Course> getFilteredCoursesList(String board, String medium, String subject, String grade,
+                                                String search, String direction) {
         List<Course> allCourses = courseRepository.findAll();
 
         List<Course> filtered = allCourses.stream()
                 .filter(c -> board == null || board.isBlank() )
-                .filter(c -> medium == null || medium.isBlank() || (c.getMedium() != null && c.getMedium().contains(medium)))
-                .filter(c -> subject == null || subject.isBlank() || (c.getSubject() != null && c.getSubject().contains(subject)))
-                .filter(c -> grade == null || grade.isBlank() || (c.getGrade() != null && c.getGrade().contains(grade)))
+                .filter(c -> {
+                    if (medium == null || medium.isBlank()) return true;
+                    return c.getMedium() != null && c.getMedium().stream()
+                            .anyMatch(m -> m.toString().equalsIgnoreCase(medium));
+                })
+                .filter(c -> {
+                    if (subject == null || subject.isBlank()) return true;
+                    return c.getSubject() != null && c.getSubject().stream()
+                            .anyMatch(s -> s.toString().equalsIgnoreCase(subject));
+                })
+                .filter(c -> {
+                    if (grade == null || grade.isBlank()) return true;
+                    return c.getGrade() != null && c.getGrade().stream()
+                            .anyMatch(g -> g.toString().equalsIgnoreCase(grade));
+                })
                 .filter(c -> {
                     if (search == null || search.isBlank()) return true;
                     String s = search.toLowerCase();
@@ -211,10 +235,6 @@ public class CourseService {
         if ("desc".equalsIgnoreCase(direction)) comparator = comparator.reversed();
         filtered.sort(comparator);
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min(start + pageable.getPageSize(), filtered.size());
-        List<Course> pageContent = start >= filtered.size() ? List.of() : filtered.subList(start, end);
-
-        return new PageImpl<>(pageContent, pageable, filtered.size());
+        return filtered;
     }
 }

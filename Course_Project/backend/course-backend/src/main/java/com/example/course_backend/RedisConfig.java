@@ -1,8 +1,6 @@
 package com.example.course_backend;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.cache.annotation.EnableCaching;
@@ -31,13 +29,6 @@ public class RedisConfig {
 
         // ✅ Support Java 8 date/time (Instant, LocalDateTime, etc.)
         mapper.registerModule(new JavaTimeModule());
-
-        // ✅ Enable polymorphic typing for non-final classes (adds @class metadata)
-        mapper.activateDefaultTyping(
-                LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL,
-                JsonTypeInfo.As.PROPERTY
-        );
 
         return mapper;
     }
