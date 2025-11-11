@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +54,12 @@ public class Course  {
     @NotEmpty(message = "Grade list cannot be null or empty")
     private List<Grade> grade = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private List<Unit> units = new ArrayList<>();
+//    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
+//    @JsonManagedReference
+//    private List<Unit> units = new ArrayList<>();
+@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
+@JsonManagedReference
+@ToString.Exclude
+@EqualsAndHashCode.Exclude
+private List<Unit> units = new ArrayList<>();
 }

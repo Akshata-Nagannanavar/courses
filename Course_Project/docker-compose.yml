@@ -33,8 +33,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-      SPRING_DATA_REDIS_HOST: 172.18.0.1
+      SPRING_DATA_REDIS_HOST: host.docker.internal
       SPRING_DATA_REDIS_PORT: 6379
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - course_network
       - db_network
@@ -95,6 +97,8 @@ volumes:
 #      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
 #      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
 #      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+#      SPRING_DATA_REDIS_HOST: host.docker.internal
+#      SPRING_DATA_REDIS_PORT: 6379
 #    networks:
 #      - course_network
 #

@@ -23,7 +23,7 @@ public class CourseService {
         this.unitRepository = unitRepository;
     }
 
-   // @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
+   @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public Course createCourse(Course course) {
 
         if (course.getMedium() != null) {
@@ -68,13 +68,13 @@ public class CourseService {
     }
 
 
-   // @Cacheable(value = "courses", key = "#courseId")
+    @Cacheable(value = "courses", key = "#courseId")
     public Course getCourseById(Integer courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found with id: " + courseId));
     }
 
-    //@CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
+    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public Course updateCourse(Integer courseId, Course updatedCourse) {
         Course existing = getCourseById(courseId);
 
@@ -126,7 +126,7 @@ public class CourseService {
         return saved;
     }
 
-   // @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
+    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public Course patchCourse(Integer courseId, Map<String, Object> updates) {
         Course course = getCourseById(courseId);
 
@@ -172,7 +172,7 @@ public class CourseService {
         return saved;
     }
 
-  //  @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
+    @CacheEvict(value = {"courses", "coursesList"}, allEntries = true)
     public void deleteCourse(Integer courseId) {
         Course course = getCourseById(courseId);
 
@@ -187,7 +187,7 @@ public class CourseService {
         logger.info("Deleted course: {} (id={})", course.getName(), course.getId());
     }
 
-    //@Cacheable(value = "coursesList", key = "#root.methodName + '_' + #board + '_' + #subject + '_' + #grade + '_' + #search + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
+    @Cacheable(value = "coursesList", key = "#root.methodName + '_' + #board + '_' + #subject + '_' + #grade + '_' + #search + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public Page<Course> filterSearchSortPageable(String board, String medium,String subject, String grade,
                                                  String search, String orderBy, String direction,
                                                  Pageable pageable) {

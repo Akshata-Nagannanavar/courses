@@ -8,6 +8,10 @@ import lombok.*;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -27,8 +31,16 @@ public class Unit implements Serializable {
     @NotBlank(message = "Unit content is required")
     private String content;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "course_id", nullable = true)
+//    @JsonBackReference
+//    private Course course;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = true)
     @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Course course;
+
 }
